@@ -1,0 +1,11 @@
+/*-------------------- Google Font --------------------*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/*-------------------- Color Variables --------------------*/
+:root {
+
+
+    --font-logo: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+    --font-title: 'garamond-premier-pro', 'Poppins', sans-serif;
+    --font-text: 'DS Trade Gothic', 'Poppins', sans-serif;
+}
