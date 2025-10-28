@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
-import db from './db.js';
+import dbPool from './db.js';
 import { fileURLToPath } from 'url';
 
 
