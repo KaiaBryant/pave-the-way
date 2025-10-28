@@ -1,8 +1,14 @@
 /* Home */
+#homepage-video {
+  width: 100%;
+  height: auto;
+}
 
 /*-------------------- Media Queries --------------------*/
 /* For tablet */
-@media screen and (min-width: 768px) {}
+@media screen and (min-width: 768px) {
+}
 
 /* For large devices */
-@media screen and (min-width: 1024px) {}
+@media screen and (min-width: 1024px) {
+}
