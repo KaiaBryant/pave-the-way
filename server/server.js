@@ -1,9 +1,25 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import db from './db.js';
+import { fileURLToPath } from 'url';
 
+
+// Environment variables
+dotenv.config();
+
+// Express setup
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware to parse JSON and form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// CORS setup
 const corsOptions = {
     origin: process.env.FRONTEND_URL,
     credentials: true,
