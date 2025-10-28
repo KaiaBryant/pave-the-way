@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
-import bcrypt from 'bcrypt';
 import db from './db.js';
 import { fileURLToPath } from 'url';
 
@@ -35,19 +34,19 @@ app.post('/api/input', async (req, res) => {
     }
 });
 
-// Render register page
-app.get('/register', (req, res) => {
-    res.render('register', { title: 'Register' });
+// Render contact
+app.get('/contact', (req, res) => {
+    res.render('contact', { title: 'Contact' });
 });
 
 // Handle form submissions
-app.post('/register', async (req, res) => {
+app.post('/contact', async (req, res) => {
     try {
         console.log('Incoming form data:', req.body);
 
-        const { first_name, last_name, gender, ethnicity, email, phone_number, zipcode, password } = req.body;
+        const { first_name, last_name, gender, ethnicity, email, phone_number, zipcode } = req.body;
 
-        if (!first_name || !last_name || !gender || !ethnicity || !email || !phone_number || !zipcode || !password) {
+        if (!first_name || !last_name || !gender || !ethnicity || !email || !phone_number || !zipcode) {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
@@ -58,14 +57,10 @@ app.post('/register', async (req, res) => {
             return res.status(409).json({ error: 'Email already registered, please sign in!' });
         }
 
-        // Hash password
-        const saltRounds = 10;
-        const password_hash = await bcrypt.hash(password, saltRounds);
-
         // Insert new user into the database
         const [result] = await db.query(
-            'INSERT INTO users (first_name, last_name, gender, ethnicity, email, phone_number, zipcode, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [first_name, last_name, gender, ethnicity, email, phone_number, zipcode, password_hash]
+            'INSERT INTO users (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
         );
 
         // Send success response
