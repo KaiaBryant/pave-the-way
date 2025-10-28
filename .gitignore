@@ -25,3 +25,7 @@ dist-ssr
 
 node_modules
 .env
+
+# Marlette's to-do list and prettier config
+todo.txt
+.prettierrc
