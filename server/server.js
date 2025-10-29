@@ -79,14 +79,18 @@ app.post('/contact', async (req, res) => {
 
 
         // Check email
-        const [existingEmail] = await db.query('SELECT id FROM users WHERE email = ?', [email]);
+        const [existingEmail] = await db.query('SELECT id FROM contact WHERE email = ?', [email]);
         if (existingEmail.length > 0) {
             return res.status(409).json({ error: 'Email already registered, please sign in!' });
         }
-
+        const [columns] = await db.query('SHOW COLUMNS FROM contact;'); //shows the columns in the users table
+        console.log(columns.map(c => c.Field));
         // Insert new user into the database
+        const [tableCheck] = await db.query('SHOW TABLES;');
+        console.log('Tables found:', tableCheck.map(t => Object.values(t)[0]));
+
         const [result] = await db.query(
-            'INSERT INTO users (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO contact (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
         );
 
