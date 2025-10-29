@@ -20,7 +20,7 @@ export default async function generateRoute(
         },
         {
           role: 'user',
-          content: `Generate a hypothetical route in Charlotte, NC that provides the most optimal route, that doesn't currently exist, from ${originZipcode} to ${destinationZipcode} for a traveler using a ${transportationMethod} as their mode of transportation. Provide a route specifically catered to the specific traffic during the time range of ${time} on ${day}. Structure your response as a JSON. A property of this JSON will be "map_directions," which will house the route as your generated JSON that is insertable into a Map API, such as Google Maps API. Another property is "text_direction," which will house the route as text`,
+          content: `Generate a hypothetical route in Charlotte, NC that provides the most optimal route, that doesn't currently exist, from ${originZipcode} to ${destinationZipcode} for a traveler using a ${transportationMethod} as their mode of transportation. Provide a route specifically catered to the specific traffic during the time range of ${time} on ${day}. Structure your response as a JSON. A property of this JSON will be "map_directions," which will be your generated object of the hypothetical route with the property of profile that is either of the following: mapbox/driving, mapbox/walking, or mapbox/cycling. It will also have the coordinates property, which is your generated coordinates. This JSON should be insertable into Mapbox's Map Matching API. Another property is "text_direction," which will be the route description as text`,
         },
       ],
       response_format: {
@@ -29,7 +29,13 @@ export default async function generateRoute(
           schema: {
             type: 'object',
             properties: {
-              map_direction: { type: 'object' },
+              map_direction: {
+                type: 'object',
+                properties: {
+                  profile: { type: 'string' },
+                  coordinates: { type: 'array' },
+                },
+              },
               text_direction: { type: 'string' },
             },
             required: ['text_direction', 'map_direction'],
