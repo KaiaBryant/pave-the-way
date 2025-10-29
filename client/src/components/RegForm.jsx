@@ -155,7 +155,7 @@ export default function RegForm() {
         // === Send data to backend ===
         async function postUserData(userData) {
             try {
-                const response = await fetch("http://localhost:5000/contact", {
+                const response = await fetch("http://localhost:3000/contact", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
