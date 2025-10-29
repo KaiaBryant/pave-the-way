@@ -20,11 +20,17 @@ app.use(express.urlencoded({ extended: true }));
 
 // CORS setup
 const corsOptions = {
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // React frontend
     credentials: true,
 };
+app.use(cors(corsOptions));
 
 // ====== Routes =========
+
+// Test route
+app.get('/', (req, res) => {
+    res.send('Server is running and ready to accept connections.');
+});
 
 app.post('/api/input', async (req, res) => {
     try {
