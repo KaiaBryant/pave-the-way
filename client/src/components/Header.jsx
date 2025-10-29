@@ -1,42 +1,30 @@
-import { Link } from 'react-router-dom';
-import '../styles/Header.css';
+import { Link } from "react-router-dom";
+import Logo from "/src/assets/ptw.png";
+import "../styles/Header.css";
 
 export default function Header() {
-    return (
-        <header className="header" id="header">
-            <nav className="nav">
-                <Link to="/" className="nav_logo">
-                    PaveTheWay
-                </Link>
+  return (
+    <header className="header">
+      <nav className="nav_list">
+        <div className="nav_left">
+          <Link to="/" className="nav_link">
+            Home
+          </Link>
+        </div>
 
-                <div className="nav_menu" id="nav-menu">
-                    <ul className="nav_list">
-                        <li className="nav_item">
-                            <Link to="/" className="nav_link">
-                                Home
-                            </Link>
-                        </li>
+        <div className="nav_center">
+          <img src={Logo} alt="Pave Train Logo" className="nav_logo" />
+        </div>
 
-                        <li className="nav_item dropdown">
-                            <Link to="/survey" className="nav_link">
-                                Survey
-                            </Link>
-                        </li>
-
-                        <li className="nav_item">
-                            <Link to="/register" className="nav_link">
-                                Register
-                            </Link>
-                        </li>
-
-                        <li className="nav_item">
-                            <Link to="/login" className="nav_link">
-                                Login
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
-    );
+        <div className="nav_right">
+          <Link to="/register" className="nav_link">
+            Register
+          </Link>
+          <Link to="/login" className="nav_link">
+            Login
+          </Link>
+        </div>
+      </nav>
+    </header>
+  );
 }

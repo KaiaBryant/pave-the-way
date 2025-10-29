@@ -1,15 +1,37 @@
 import express from 'express';
 import cors from 'cors';
 import generateRoute from './perplexity.js';
+import path from 'path';
+import dotenv from 'dotenv';
+import dbPool from './db.js';
+import { fileURLToPath } from 'url';
 
+
+// Environment variables
+dotenv.config();
+
+// Express setup
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware to parse JSON and form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// CORS setup
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
-  credentials: true,
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // React frontend
+    credentials: true,
 };
 app.use(cors(corsOptions));
+
+// ====== Routes =========
+
+// Test route
+app.get('/', (req, res) => {
+    res.send('Server is running and ready to accept connections.');
+});
 
 app.post('/api/input', async (req, res) => {
   try {
@@ -39,6 +61,50 @@ app.post('/api/input', async (req, res) => {
   }
 });
 
+// Render contact
+app.get('/contact', (req, res) => {
+    res.render('contact', { title: 'Contact' });
+});
+
+// Handle form submissions
+app.post('/contact', async (req, res) => {
+    try {
+        console.log('Incoming form data:', req.body);
+
+        const { first_name, last_name, gender, ethnicity, email, phone_number, zipcode } = req.body;
+
+        if (!first_name || !last_name || !gender || !ethnicity || !email || !phone_number || !zipcode) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+
+        // Check email
+        const [existingEmail] = await db.query('SELECT id FROM users WHERE email = ?', [email]);
+        if (existingEmail.length > 0) {
+            return res.status(409).json({ error: 'Email already registered, please sign in!' });
+        }
+
+        // Insert new user into the database
+        const [result] = await db.query(
+            'INSERT INTO users (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
+        );
+
+        // Send success response
+        res.status(201).json({
+            message: `Welcome ${first_name}!`,
+            userId: result.insertId,
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'An error occurred during registration' });
+    }
+});
+
+
+
+
+// Start server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
