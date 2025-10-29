@@ -183,31 +183,36 @@ export default function RegForm() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <label htmlFor="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" />
+            <h1 id="form-header">Stay Connected</h1>
+            <div className="form-content">
+                <div className="name-field">
+                    <label className="form-label fname-field" htmlFor="first_name">First Name</label>
+                    <label className="form-label lname-field" htmlFor="last_name">Last Name</label>
+                </div>
+                <div className="name-field">
+                    <input className="input-field" type="text" id="first_name" name="first_name" />
+                    <input className="input-field" type="text" id="last_name" name="last_name" />
+                </div>
+                <label className="form-label" htmlFor="gender">Gender</label>
+                <input className="input-field" type="text" id="gender" name="gender" />
 
-            <label htmlFor="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" />
+                <label className="form-label" htmlFor="ethnicity">Ethnicity</label>
+                <input className="input-field" type="text" id="ethnicity" name="ethnicity" />
 
-            <label htmlFor="gender">Gender</label>
-            <input type="text" id="gender" name="gender" />
+                <label className="form-label" htmlFor="email">Email</label>
+                <input className="input-field" type="text" id="email" name="email" />
 
-            <label htmlFor="ethnicity">Ethnicity</label>
-            <input type="text" id="ethnicity" name="ethnicity" />
+                <label className="form-label" htmlFor="phone_number">Phone Number</label>
+                <input className="input-field" type="text" id="phone_number" name="phone_number" />
 
-            <label htmlFor="email">Email</label>
-            <input type="text" id="email" name="email" />
+                <label className="form-label" htmlFor="zipcode">Zipcode</label>
+                <input className="input-field" type="text" id="zipcode" name="zipcode" />
 
-            <label htmlFor="phone_number">Phone Number</label>
-            <input type="text" id="phone_number" name="phone_number" />
+                <button id="join" type="submit">Submit</button>
 
-            <label htmlFor="zipcode">Zipcode</label>
-            <input type="text" id="zipcode" name="zipcode" />
-
-            <button type="submit">Submit</button>
-
-            {error && <span id="error-message" style={{ color: "red" }}>{error}</span>}
-            {success && <span id="success-message" style={{ color: "green" }}>{success}</span>}
+                {error && <span id="error-message" style={{ color: "red" }}>{error}</span>}
+                {success && <span id="success-message" style={{ color: "green" }}>{success}</span>}
+            </div>
         </form>
     );
 }
