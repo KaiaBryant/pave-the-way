@@ -1,10 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './styles/variables.css';
-import './styles/global.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./styles/variables.css";
+import "./styles/global.css";
+import "mdb-ui-kit/css/mdb.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

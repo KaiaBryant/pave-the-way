@@ -17,11 +17,11 @@ export default function Header() {
         </div>
 
         <div className="nav_right">
-          <Link to="/register" className="nav_link">
-            Register
+          <Link to="/survey" className="nav_link">
+            Survey
           </Link>
-          <Link to="/login" className="nav_link">
-            Login
+          <Link to="/contact" className="nav_link">
+            Contact
           </Link>
         </div>
       </nav>
