@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import generateRoute from './perplexity.js';
 import path from 'path';
 import dotenv from 'dotenv';
 import dbPool from './db.js';
@@ -33,11 +34,31 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/input', async (req, res) => {
+  try {
+    // console.log(req.body);
+    let originZipcode = 28205;
+    let destinationZipcode = 28208;
+    let transportationMethod = 'bike';
+    let time = '8:00 AM';
+    let day = 'Tuesday';
+
     try {
-        console.log(req.body);
+      const generatedRes = await generateRoute(
+        originZipcode,
+        destinationZipcode,
+        transportationMethod,
+        time,
+        day
+      );
+      console.log('Generated route response:', generatedRes);
+      res.json(generatedRes);
     } catch (err) {
-        console.log(`Error fetching AI-generated response: ${err}`);
+      console.log('Error fetching generated route from Perplexity:' + err);
+      res.json({ error: 'Error fetching generated route from Perplexity' });
     }
+  } catch (err) {
+    console.log(`Error fetching AI-generated response: ${err}`);
+  }
 });
 
 // Render contact
@@ -85,5 +106,5 @@ app.post('/contact', async (req, res) => {
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
