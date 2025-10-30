@@ -3,7 +3,7 @@ import cors from 'cors';
 import generateRoute from './perplexity.js';
 import path from 'path';
 import dotenv from 'dotenv';
-import dbPool from './db.js';
+import db from './db.js';
 import { fileURLToPath } from 'url';
 
 // Environment variables
@@ -106,6 +106,14 @@ app.post('/contact', async (req, res) => {
         .status(409)
         .json({ error: 'Email already registered, please sign in!' });
     }
+    const [columns] = await db.query('SHOW COLUMNS FROM contact;'); //shows the columns in the users table
+    console.log(columns.map((c) => c.Field));
+    // Insert new user into the database
+    const [tableCheck] = await db.query('SHOW TABLES;');
+    console.log(
+      'Tables found:',
+      tableCheck.map((t) => Object.values(t)[0])
+    );
 
     // Insert new user into the database
     const [result] = await db.query(
