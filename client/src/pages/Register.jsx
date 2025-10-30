@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import '../styles/Register.css';
+import icon from "../assets/question-circle.svg"
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -16,6 +18,11 @@ export default function Register() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const confirmPassword = useRef(null);
+    const notice = useRef(null);
+    const noticeMobile = useRef(null);
+
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -54,6 +61,22 @@ export default function Register() {
         });
 
 
+
+
+    }
+
+    const handleClick = () => {
+        noticeMobile.current.style.display = "block"
+        notice.current.style.display = "none"
+    }
+
+    const handleHover = () => {
+        notice.current.style.opacity = "100%"
+        noticeMobile.current.style.display = "none"
+    }
+
+    const handleMouseLeave = () => {
+        notice.current.style.opacity = "0%"
     }
 
     const handleSubmit = async (e) => {
@@ -151,6 +174,16 @@ export default function Register() {
                     className="input-field border rounded-lg p-2 w-full mt-4"
                 />
 
+                <div onClick={handleClick} onMouseLeave={handleMouseLeave} onMouseEnter={handleHover} className="notice">
+                    <img src={icon}></img>
+                    Why we ask for demographic data <br></br>
+                    <div ref={notice} className="notice-details">
+                        We use this information to ensure equal access for all communites
+                    </div>
+                    <div ref={noticeMobile} className="mobile-notice">
+                        We use this information to ensure equal access for all communites
+                    </div>
+                </div>
 
                 <select
                     name="gender"
