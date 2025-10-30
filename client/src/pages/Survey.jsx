@@ -1,15 +1,15 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import "../styles/Survey.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import '../styles/Survey.css';
 
 export default function Survey() {
   // State for dropdown selections
-  const [transport, setTransport] = useState("");
-  const [time, setTime] = useState("");
-  const [day, setDay] = useState("");
-  const [toZip, setToZip] = useState("");
-  const [fromZip, setFromZip] = useState("");
+  const [transport, setTransport] = useState('');
+  const [time, setTime] = useState('');
+  const [day, setDay] = useState('');
+  const [toZip, setToZip] = useState('');
+  const [fromZip, setFromZip] = useState('');
   // Handle individual dropdowns
   const handleTransportClick = (e) => setTransport(e.target.value);
   const handleTimeClick = (e) => setTime(e.target.value);
@@ -18,30 +18,65 @@ export default function Survey() {
   const navigate = useNavigate();
 
   // Handle form submission logic here
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const zipRegex = /^\d{5}$/;
     if (!transport || !time || !day || !toZip || !fromZip) {
-      alert("Please fill in all fields before submitting");
+      alert('Please fill in all fields before submitting');
     }
     if (!zipRegex.test(toZip) || !zipRegex.test(fromZip)) {
-      alert("Zipcodes must be 5 digits");
+      alert('Zipcodes must be 5 digits');
       return;
     } else if (
-      transport === "select" ||
-      time === "select" ||
-      day === "select" ||
-      toZip === "select" ||
-      fromZip === "select"
+      transport === 'select' ||
+      time === 'select' ||
+      day === 'select' ||
+      toZip === 'select' ||
+      fromZip === 'select'
     ) {
-      console.log("Error: Please make valid selections for all fields");
+      console.log('Error: Please make valid selections for all fields');
     } else {
-      navigate("/result", {
-        state: { transport, time, day, toZip, fromZip },
+      const generatedRes = await postInput(
+        fromZip,
+        toZip,
+        transport,
+        time,
+        day
+      );
+      console.log(
+        'Posted inputs => Returned generated response:',
+        generatedRes
+      );
+      navigate('/result', {
+        state: { fromZip, toZip, transport, time, day },
       });
-      console.log({ transport, time, day, toZip, fromZip }); // Print out results
     }
   };
+
+  const postInput = async (fromZip, toZip, transport, time, day) => {
+    try {
+      const res = await fetch('/api/input', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          originZipcode: fromZip,
+          destinationZipcode: toZip,
+          transportationMethod: transport,
+          time,
+          day,
+        }),
+      });
+      if (!res.ok) throw new Error('HTTP Request Status Error:', res.status);
+      const data = res.json();
+      console.log('AI generated response:', data);
+      return data;
+    } catch (err) {
+      console.log('Error POST request to /api/input:', err);
+    }
+  };
+
   return (
     <div>
       <section className="survey-form-section">

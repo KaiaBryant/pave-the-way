@@ -40,6 +40,7 @@ app.post('/api/input', async (req, res) => {
       time,
       day,
     } = req.body;
+
     try {
       const generatedRes = await generateRoute(
         Number(originZipcode),
@@ -49,9 +50,11 @@ app.post('/api/input', async (req, res) => {
         day
       );
       console.log('Generated route response:', generatedRes);
+
       // Storing generated route to the database (waiting for database creation)
       //   const [result] = await db.query('INSERT INTO table_name (user_route, direction) VALUES (?, ?)', [generatedRes.user_input, generatedRes.text_direction]);
       //   console.log('Stored generated route to the backend', result);
+
       res.json(generatedRes);
     } catch (err) {
       console.log('Error fetching generated route from Perplexity:' + err);
