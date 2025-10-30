@@ -1,7 +1,161 @@
-label {
-    display: block;
+form {
+    flex-shrink: 0;
+    display: inline;
+    margin: auto;
+    width: 100%;
+    background-color: white;
+    scroll-snap-align: start;
 }
 
-input {
+#form-header {
+    font-size: 35px;
+    width: 60%;
+    margin: auto;
+    padding: 30px 50px 30px;
+    text-align: center;
+}
+
+.form-content {
+    width: 50%;
+    margin: auto;
+    padding-bottom: 30px;
+}
+
+.form-label {
+    font-size: 24px;
     display: block;
+    padding-top: 20px;
+    width: fit-content;
+    padding-bottom: 10px;
+}
+
+.asterisk {
+    color: rgb(178, 16, 16);
+}
+
+.name-field {
+    display: flex;
+    gap: 10%;
+    justify-content: space-between;
+}
+
+
+.lname-field,
+.fname-field {
+    width: 45%;
+    text-align: start;
+}
+
+.input-field {
+    font-size: 20px;
+    width: 100%;
+    display: block;
+    margin: auto;
+    padding-top: 10px;
+    border: none;
+    border-bottom: 2px solid #84a0b3;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #085d99;
+}
+
+#join {
+    display: block;
+    margin: auto;
+    color: white;
+    background-color: #173042;
+    border-color: transparent;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-size: 40px;
+    width: 50%;
+    padding: 5px 20px 5px;
+    transition: 0.2s;
+}
+
+#join:hover {
+    cursor: pointer;
+    background-color: #17304283;
+}
+
+#error {
+    padding-top: 20px;
+    color: rgb(184, 12, 12);
+}
+
+
+#sign-in {
+    font-size: 20px;
+    text-align: center;
+    padding-top: 20px;
+}
+
+#sign-in a,
+#sign-in a:visited {
+    color: black;
+}
+
+@media only screen and (max-width: 1600px) {
+
+    .star-container {
+        display: none;
+    }
+
+    main {
+        width: 90%;
+    }
+
+    .about-paragraph {
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    main {
+        margin-bottom: 50px;
+    }
+
+    .form-content {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    main {
+        margin-bottom: 50px;
+    }
+
+    form {
+        width: 100%;
+    }
+
+    #scroll {
+        font-size: 25px;
+    }
+
+    .about-paragraph {
+        font-size: 18px;
+    }
+
+    #form-header {
+        font-size: 20px;
+        width: 85%;
+        padding: 30px 0px 30px;
+    }
+
+    .form-label {
+        font-size: 20px;
+    }
+
+    .input-field {
+        padding: 5px;
+        font-size: 16px;
+    }
+
+    #join {
+        font-size: 30px;
+    }
+
 }

@@ -3,7 +3,7 @@ import cors from 'cors';
 import generateRoute from './perplexity.js';
 import path from 'path';
 import dotenv from 'dotenv';
-import dbPool from './db.js';
+import db from './db.js';
 import { fileURLToPath } from 'url';
 
 // Environment variables
@@ -33,27 +33,25 @@ app.get('/', (req, res) => {
 
 app.post('/api/input', async (req, res) => {
   try {
-    // console.log(req.body);
-    let originZipcode = 28205;
-    let destinationZipcode = 28208;
-    let transportationMethod = 'bike';
-    let time = '8:00 AM';
-    let day = 'Tuesday';
-
+    const {
+      originZipcode,
+      destinationZipcode,
+      transportationMethod,
+      time,
+      day,
+    } = req.body;
     try {
       const generatedRes = await generateRoute(
-        originZipcode,
-        destinationZipcode,
+        Number(originZipcode),
+        Number(destinationZipcode),
         transportationMethod,
         time,
         day
       );
       console.log('Generated route response:', generatedRes);
-
       // Storing generated route to the database (waiting for database creation)
       //   const [result] = await db.query('INSERT INTO table_name (user_route, direction) VALUES (?, ?)', [generatedRes.user_input, generatedRes.text_direction]);
       //   console.log('Stored generated route to the backend', result);
-
       res.json(generatedRes);
     } catch (err) {
       console.log('Error fetching generated route from Perplexity:' + err);
@@ -71,6 +69,7 @@ app.get('/contact', (req, res) => {
 
 // Handle form submissions
 app.post('/contact', async (req, res) => {
+
   try {
     console.log('Incoming form data:', req.body);
 
@@ -94,6 +93,42 @@ app.post('/contact', async (req, res) => {
       !zipcode
     ) {
       return res.status(400).json({ error: 'All fields are required' });
+      
+    try {
+        console.log('Incoming form data:', req.body);
+
+        const { first_name, last_name, gender, ethnicity, email, phone_number, zipcode } = req.body;
+
+        if (!first_name || !last_name || !gender || !ethnicity || !email || !phone_number || !zipcode) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+
+        // Check email
+        const [existingEmail] = await db.query('SELECT id FROM contact WHERE email = ?', [email]);
+        if (existingEmail.length > 0) {
+            return res.status(409).json({ error: 'Email already registered, please sign in!' });
+        }
+        const [columns] = await db.query('SHOW COLUMNS FROM contact;'); //shows the columns in the users table
+        console.log(columns.map(c => c.Field));
+        // Insert new user into the database
+        const [tableCheck] = await db.query('SHOW TABLES;');
+        console.log('Tables found:', tableCheck.map(t => Object.values(t)[0]));
+
+        const [result] = await db.query(
+            'INSERT INTO contact (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
+        );
+
+        // Send success response
+        res.status(201).json({
+            message: `Welcome ${first_name}!`,
+            userId: result.insertId,
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'An error occurred during registration' });
+
     }
 
     // Check email
@@ -126,5 +161,5 @@ app.post('/contact', async (req, res) => {
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
