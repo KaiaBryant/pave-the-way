@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import '../styles/Register.css';
 
 export default function Register() {
@@ -15,7 +15,7 @@ export default function Register() {
 
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
-
+    const confirmPassword = useRef(null);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -69,6 +69,33 @@ export default function Register() {
         const zipcodeRegex = /^\d{5}(?:[-\s]\d{4})?$/; //5 digits or 5 digits, then a dash, then 4 digits
         const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$/; //minimum 8 chars, 1 special char, 1 number
 
+        if (!first_name || !last_name || !gender || ethnicity.length === 0 || !email || !password || !phone_number || !zipcode) {
+            setError("Please fill out all required fields");
+            return;
+        }
+        else if (!emailRegex.test(email)) {
+            setError("Please enter a valid email");
+            return;
+        }
+        else if (!phoneRegex.test(phone_number)) {
+            setError("Please enter a valid phone number");
+            return;
+        }
+        else if (!zipcodeRegex.test(zipcode)) {
+            setError("Please enter a valid zipcode");
+            return;
+        }
+        else if (!passwordRegex.test(password)) {
+            setError("Password must have a minimum of 8 characters, 1 special character, and 1 number")
+            return
+        } else if (password !== confirmPassword.current.value) {
+            setError("Password and Confirm Password must match");
+        } else {
+            setError("");
+            setMessage("Form validated. Sending data...");
+        }
+
+
         // try {
         //     const res = await fetch("http://localhost:3000/register", {
         //         method: "POST",
@@ -99,40 +126,37 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="form-container min-h-screen flex items-center justify-center bg-gray-50">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md"
+                className=" bg-white p-8 rounded-2xl shadow-md w-full max-w-md"
             >
                 <h2 className="text-2xl font-semibold mb-6 text-center">Register</h2>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <input
-                        type="text"
-                        name="first_name"
-                        placeholder="First Name"
-                        value={formData.first_name}
-                        onChange={handleChange}
-                        className="border rounded-lg p-2"
-                        required
-                    />
-                    <input
-                        type="text"
-                        name="last_name"
-                        placeholder="Last Name"
-                        value={formData.last_name}
-                        onChange={handleChange}
-                        className="border rounded-lg p-2"
-                        required
-                    />
-                </div>
+
+                <input
+                    type="text"
+                    name="first_name"
+                    placeholder="First Name"
+                    value={formData.first_name}
+                    onChange={handleChange}
+                    className="input-field border rounded-lg p-2 w-full mt-4"
+                />
+                <input
+                    type="text"
+                    name="last_name"
+                    placeholder="Last Name"
+                    value={formData.last_name}
+                    onChange={handleChange}
+                    className="input-field border rounded-lg p-2 w-full mt-4"
+                />
+
 
                 <select
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
-                    className="border rounded-lg p-2 w-full mt-4"
-                    required
+                    className="g-select input-field border rounded-lg p-2 w-full mt-4"
                 >
                     <option value="">Select Gender</option>
                     <option value="male">Male</option>
@@ -141,78 +165,79 @@ export default function Register() {
                     <option value="other">Other</option>
                 </select>
 
-                <fieldset>
-                    <legend className="form-label">Ethnicity (Optional)</legend>
-                    <label className="checks">
-                        <input
-                            type="checkbox"
-                            value="Hispanic or Latino"
-                            onChange={handleEthnicityChange}
-                            checked={formData.ethnicity.includes("Hispanic or Latino")}
-                        />
-                        Hispanic or Latino
-                    </label>
+                <fieldset className="input-field checkbox border rounded-lg p-2 w-full mt-4">
+                    <div className="checkbox-content">
+                        <legend className="form-label">Ethnicity</legend>
+                        <label className="checks">
+                            <input
+                                type="checkbox"
+                                value="Hispanic or Latino"
+                                onChange={handleEthnicityChange}
+                                checked={formData.ethnicity.includes("Hispanic or Latino")}
+                            />
+                            Hispanic or Latino
+                        </label>
 
-                    <label className="checks">
-                        <input
-                            type="checkbox"
-                            value="Black or African American"
-                            onChange={handleEthnicityChange}
-                            checked={formData.ethnicity.includes("Black or African American")}
-                        />
-                        Black or African American
-                    </label>
+                        <label className="checks">
+                            <input
+                                type="checkbox"
+                                value="Black or African American"
+                                onChange={handleEthnicityChange}
+                                checked={formData.ethnicity.includes("Black or African American")}
+                            />
+                            Black or African American
+                        </label>
 
-                    <label className="checks">
-                        <input
-                            type="checkbox"
-                            value="White/Caucasian"
-                            onChange={handleEthnicityChange}
-                            checked={formData.ethnicity.includes("White/Caucasian")}
-                        />
-                        White/Caucasian
-                    </label>
+                        <label className="checks">
+                            <input
+                                type="checkbox"
+                                value="White/Caucasian"
+                                onChange={handleEthnicityChange}
+                                checked={formData.ethnicity.includes("White/Caucasian")}
+                            />
+                            White/Caucasian
+                        </label>
 
-                    <label className="checks">
-                        <input
-                            type="checkbox"
-                            value="Asian"
-                            onChange={handleEthnicityChange}
-                            checked={formData.ethnicity.includes("Asian")}
-                        />
-                        Asian
-                    </label>
+                        <label className="checks">
+                            <input
+                                type="checkbox"
+                                value="Asian"
+                                onChange={handleEthnicityChange}
+                                checked={formData.ethnicity.includes("Asian")}
+                            />
+                            Asian
+                        </label>
 
-                    <label className="checks">
-                        <input
-                            type="checkbox"
-                            value="Middle Eastern or North African"
-                            onChange={handleEthnicityChange}
-                            checked={formData.ethnicity.includes("Middle Eastern or North African")}
-                        />
-                        Middle Eastern or North African
-                    </label>
+                        <label className="checks">
+                            <input
+                                type="checkbox"
+                                value="Middle Eastern or North African"
+                                onChange={handleEthnicityChange}
+                                checked={formData.ethnicity.includes("Middle Eastern or North African")}
+                            />
+                            Middle Eastern or North African
+                        </label>
 
-                    <label className="checks">
-                        <input
-                            type="checkbox"
-                            value="Native Hawaiian or Pacific Islander"
-                            onChange={handleEthnicityChange}
-                            checked={formData.ethnicity.includes("Native Hawaiian or Pacific Islander")}
-                        />
-                        Native Hawaiian or Pacific Islander
-                    </label>
+                        <label className="checks">
+                            <input
+                                type="checkbox"
+                                value="Native Hawaiian or Pacific Islander"
+                                onChange={handleEthnicityChange}
+                                checked={formData.ethnicity.includes("Native Hawaiian or Pacific Islander")}
+                            />
+                            Native Hawaiian or Pacific Islander
+                        </label>
 
-                    <label className="checks">
-                        <input
-                            type="checkbox"
-                            value="Prefer not to answer"
-                            onChange={handlePreference}
-
-                            checked={formData.ethnicity.includes("Prefer not to answer")}
-                        />
-                        Prefer not to answer
-                    </label>
+                        <label className="checks">
+                            <input
+                                type="checkbox"
+                                value="Prefer not to answer"
+                                onChange={handlePreference}
+                                checked={formData.ethnicity.includes("Prefer not to answer")}
+                            />
+                            Prefer not to answer
+                        </label>
+                    </div>
                 </fieldset>
 
                 <input
@@ -221,8 +246,7 @@ export default function Register() {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="border rounded-lg p-2 w-full mt-4"
-                    required
+                    className="input-field border rounded-lg p-2 w-full mt-4"
                 />
 
                 <input
@@ -231,8 +255,15 @@ export default function Register() {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="border rounded-lg p-2 w-full mt-4"
-                    required
+                    className="input-field border rounded-lg p-2 w-full mt-4"
+                />
+
+                <input
+                    type="password"
+                    name="confirm-password"
+                    placeholder="Confirm Password"
+                    ref={confirmPassword}
+                    className="input-field border rounded-lg p-2 w-full mt-4"
                 />
 
                 <input
@@ -241,8 +272,7 @@ export default function Register() {
                     placeholder="Phone Number"
                     value={formData.phone_number}
                     onChange={handleChange}
-                    className="border rounded-lg p-2 w-full mt-4"
-                    required
+                    className="input-field border rounded-lg p-2 w-full mt-4"
                 />
 
                 <input
@@ -251,19 +281,19 @@ export default function Register() {
                     placeholder="Zip Code"
                     value={formData.zipcode}
                     onChange={handleChange}
-                    className="border rounded-lg p-2 w-full mt-4"
-                    required
+                    className="input-field border rounded-lg p-2 w-full mt-4"
                 />
 
-                {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
-                {message && <p className="text-green-600 text-sm mt-2">{message}</p>}
-
-                <button
-                    type="submit"
-                    className="bg-blue-600 text-white w-full mt-6 py-2 rounded-lg hover:bg-blue-700 transition"
-                >
-                    Register
-                </button>
+                {error && <p className="text-danger text-sm mt-2">{error}</p>}
+                {message && <p className="text-success text-sm mt-2">{message}</p>}
+                <div className="d-flex justify-content-center">
+                    <button
+                        type="submit"
+                        className="btn btn-lg btn-dark btn-primary transition"
+                    >
+                        Register
+                    </button>
+                </div>
             </form>
         </div>
     );
