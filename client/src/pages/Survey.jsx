@@ -8,8 +8,8 @@ export default function Survey() {
   const [transport, setTransport] = useState("");
   const [time, setTime] = useState("");
   const [day, setDay] = useState("");
-  const [toZip, setToZip] = useState("");
-  const [fromZip, setFromZip] = useState("");
+  const [toAddress, setToAddress] = useState("");
+  const [fromAddress, setFromAddress] = useState("");
   // Handle individual dropdowns
   const handleTransportClick = (e) => setTransport(e.target.value);
   const handleTimeClick = (e) => setTime(e.target.value);
@@ -20,26 +20,27 @@ export default function Survey() {
   // Handle form submission logic here
   const handleSubmit = (e) => {
     e.preventDefault();
-    const zipRegex = /^\d{5}$/;
-    if (!transport || !time || !day || !toZip || !fromZip) {
+    const addressRegex =
+      /^(\d{1,}) [a-zA-Z0-9\s]+(\,)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}$/;
+    if (!transport || !time || !day || !toAddress || !fromAddress) {
       alert("Please fill in all fields before submitting");
     }
-    if (!zipRegex.test(toZip) || !zipRegex.test(fromZip)) {
-      alert("Zipcodes must be 5 digits");
+    if (!addressRegex.test(toAddress) || !addressRegex.test(fromAddress)) {
+      alert("Must insert a valid address");
       return;
     } else if (
       transport === "select" ||
       time === "select" ||
       day === "select" ||
-      toZip === "select" ||
-      fromZip === "select"
+      toAddress === "select" ||
+      fromAddress === "select"
     ) {
       console.log("Error: Please make valid selections for all fields");
     } else {
       navigate("/result", {
-        state: { transport, time, day, toZip, fromZip },
+        state: { transport, time, day, toAddress, fromAddress },
       });
-      console.log({ transport, time, day, toZip, fromZip }); // Print out results
+      console.log({ transport, time, day, toAddress, fromAddress }); // Print out results
     }
   };
   return (
@@ -117,26 +118,23 @@ export default function Survey() {
           </select>
           <br />
 
-          <label htmlFor="to-zip-form">To Zipcode:</label>
+          <label htmlFor="to-adress-form">To Address:</label>
           <input
             type="text"
-            id="to-zip"
+            id="to-adress"
             placeholder="To"
-            value={toZip}
-            pattern="\d{5}"
-            title="Please enter a 5-digit zipcode"
-            onChange={(e) => setToZip(e.target.value)}
+            value={toAddress}
+            onChange={(e) => setToAddress(e.target.value)}
           />
 
-          <label htmlFor="from-zip-form">From Zipcode:</label>
+          <label htmlFor="from-address-form">From Address:</label>
           <input
             type="text"
-            id="from-zip"
+            id="from-adress"
             placeholder="From"
-            value={fromZip}
-            pattern="\d{5}"
-            title="Please enter a 5-digit zipcode"
-            onChange={(e) => setFromZip(e.target.value)}
+            value={fromAddress}
+            // pattern="[\w',-\\/.\s]"
+            onChange={(e) => setFromAddress(e.target.value)}
           />
 
           <button type="submit" className="survey-form__button">

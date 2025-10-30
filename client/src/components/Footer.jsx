@@ -1,12 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../styles/Footer.css";
 
 export default function Footer() {
   return (
     <div>
       <footer className="text-center text-lg-start bg-body-tertiary text-muted">
-        {/* Section: Social media */}
+        {/* Section: Social Media */}
         <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
           <div className="me-5 d-none d-lg-block">
             <span>Get connected with us on social networks:</span>
@@ -43,28 +42,28 @@ export default function Footer() {
                   <i className="fas fa-gem me-3"></i>PAVE THE WAY
                 </h6>
                 <p>
-                  Here you can use rows and columns to organize your footer
-                  content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                  elit.
+                  Improving Mecklenburg County's transportation by identify
+                  optimal routes and transportation solutions through community
+                  surveys
                 </p>
               </div>
 
               <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
                 <h6 className="text-uppercase fw-bold mb-4">Useful links</h6>
                 <p>
-                  <a href="#!" className="text-reset">
+                  <Link to="/" className="text-reset">
                     Home
-                  </a>
+                  </Link>
                 </p>
                 <p>
-                  <a href="#!" className="text-reset">
+                  <Link to="/survey" className="text-reset">
                     Survey
-                  </a>
+                  </Link>
                 </p>
                 <p>
-                  <a href="#!" className="text-reset">
+                  <Link to="/contact" className="text-reset">
                     Contact
-                  </a>
+                  </Link>
                 </p>
               </div>
 
