@@ -1,7 +1,7 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import "../styles/Survey.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import '../styles/Survey.css';
 
 export default function Survey() {
   // State for dropdown selections
@@ -18,7 +18,7 @@ export default function Survey() {
   const navigate = useNavigate();
 
   // Handle form submission logic here
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const addressRegex =
       /^(\d{1,}) [a-zA-Z0-9\s]+(\,)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}$/;
@@ -35,14 +35,50 @@ export default function Survey() {
       toAddress === "select" ||
       fromAddress === "select"
     ) {
-      console.log("Error: Please make valid selections for all fields");
+      console.log('Error: Please make valid selections for all fields');
     } else {
-      navigate("/result", {
-        state: { transport, time, day, toAddress, fromAddress },
+
+      const generatedRes = await postInput(
+        fromAddress,
+        toAddress,
+        transport,
+        time,
+        day
+      );
+      console.log(
+        'Posted inputs => Returned generated response:',
+        generatedRes
+      );
+      navigate('/result', {
+        state: { fromAddress, toAddress, transport, time, day },
       });
-      console.log({ transport, time, day, toAddress, fromAddress }); // Print out results
     }
   };
+
+  const postInput = async (fromZip, toZip, transport, time, day) => {
+    try {
+      const res = await fetch('/api/input', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          originZipcode: fromZip,
+          destinationZipcode: toZip,
+          transportationMethod: transport,
+          time,
+          day,
+        }),
+      });
+      if (!res.ok) throw new Error('HTTP Request Status Error:', res.status);
+      const data = res.json();
+      console.log('AI generated response:', data);
+      return data;
+    } catch (err) {
+      console.log('Error POST request to /api/input:', err);
+    }
+  };
+
   return (
     <div>
       <section className="survey-form-section">

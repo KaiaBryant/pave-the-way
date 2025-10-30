@@ -1,4 +1,3 @@
-// Set up node to connect to database 
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -11,19 +10,15 @@ const dbPool = mysql.createPool({
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT || 3306,
     waitForConnections: true,
-    connectionLimit: 10
+    connectionLimit: 10,
 });
 
-// Use promise
-const promisePool = dbPool.promise();
+// Test connection
+try {
+    await dbPool.query('SELECT 1');
+    console.log('Database connected successfully!');
+} catch (err) {
+    console.error('Database connection failed:', err.message);
+}
 
-// Test conenction 
-promisePool.query('SELECT 1')
-    .then(() => {
-        console.log('Database connected successfully!');
-    })
-    .catch((err) => {
-        console.error('Database connection failed:', err.message);
-    });
-
-module.exports = promisePool;
+export default dbPool;
