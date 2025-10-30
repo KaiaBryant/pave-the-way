@@ -1,8 +1,30 @@
 /* Survey */
+.survey-form-section {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 4px;
+}
 
+.survey-form-section label {
+  color: black;
+  font-weight: bold;
+  padding: 20px;
+}
+
+#transport-form,
+#time-form,
+#day-form,
+#to-zip,
+#from-zip {
+  color: rgb(212, 23, 23);
+  margin-bottom: 10px;
+}
 /*-------------------- Media Queries --------------------*/
 /* For tablet */
-@media screen and (min-width: 768px) {}
+@media screen and (min-width: 768px) {
+}
 
 /* For large devices */
-@media screen and (min-width: 1024px) {}
+@media screen and (min-width: 1024px) {
+}
