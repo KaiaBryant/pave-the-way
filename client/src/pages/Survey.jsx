@@ -48,7 +48,9 @@ export default function Survey() {
         generatedRes
       );
       navigate('/result', {
-        state: { fromZip, toZip, transport, time, day },
+        state: {
+          generatedRes,
+        },
       });
     }
   };
