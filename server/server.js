@@ -95,6 +95,42 @@ app.post('/contact', async (req, res) => {
       !zipcode
     ) {
       return res.status(400).json({ error: 'All fields are required' });
+      
+    try {
+        console.log('Incoming form data:', req.body);
+
+        const { first_name, last_name, gender, ethnicity, email, phone_number, zipcode } = req.body;
+
+        if (!first_name || !last_name || !gender || !ethnicity || !email || !phone_number || !zipcode) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+
+        // Check email
+        const [existingEmail] = await db.query('SELECT id FROM contact WHERE email = ?', [email]);
+        if (existingEmail.length > 0) {
+            return res.status(409).json({ error: 'Email already registered, please sign in!' });
+        }
+        const [columns] = await db.query('SHOW COLUMNS FROM contact;'); //shows the columns in the users table
+        console.log(columns.map(c => c.Field));
+        // Insert new user into the database
+        const [tableCheck] = await db.query('SHOW TABLES;');
+        console.log('Tables found:', tableCheck.map(t => Object.values(t)[0]));
+
+        const [result] = await db.query(
+            'INSERT INTO contact (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
+        );
+
+        // Send success response
+        res.status(201).json({
+            message: `Welcome ${first_name}!`,
+            userId: result.insertId,
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'An error occurred during registration' });
+
     }
 
     // Check email
@@ -107,14 +143,6 @@ app.post('/contact', async (req, res) => {
         .status(409)
         .json({ error: 'Email already registered, please sign in!' });
     }
-    const [columns] = await db.query('SHOW COLUMNS FROM contact;'); //shows the columns in the users table
-    console.log(columns.map((c) => c.Field));
-    // Insert new user into the database
-    const [tableCheck] = await db.query('SHOW TABLES;');
-    console.log(
-      'Tables found:',
-      tableCheck.map((t) => Object.values(t)[0])
-    );
 
     // Insert new user into the database
     const [result] = await db.query(
