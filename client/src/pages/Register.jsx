@@ -20,7 +20,7 @@ export default function Register() {
     const confirmPassword = useRef(null);
     const notice = useRef(null);
     const noticeMobile = useRef(null);
-
+    const navigate = useNavigate();
 
 
     const handleChange = (e) => {
@@ -116,36 +116,36 @@ export default function Register() {
         } else {
             setError("");
             setMessage("Form validated. Sending data...");
+            navigate("/login")
+            try {
+                const res = await fetch("http://localhost:3000/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || "Registration failed");
+                }
+
+                setMessage(data.message || "Registration successful!");
+                setFormData({
+                    first_name: "",
+                    last_name: "",
+                    gender: "",
+                    ethnicity: "",
+                    email: "",
+                    password: "",
+                    phone_number: "",
+                    zipcode: "",
+                });
+            } catch (err) {
+                setError(err.message);
+            }
         }
 
-
-        // try {
-        //     const res = await fetch("http://localhost:3000/register", {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify(formData),
-        //     });
-
-        //     const data = await res.json();
-
-        //     if (!res.ok) {
-        //         throw new Error(data.error || "Registration failed");
-        //     }
-
-        //     setMessage(data.message || "Registration successful!");
-        //     setFormData({
-        //         first_name: "",
-        //         last_name: "",
-        //         gender: "",
-        //         ethnicity: "",
-        //         email: "",
-        //         password: "",
-        //         phone_number: "",
-        //         zipcode: "",
-        //     });
-        // } catch (err) {
-        //     setError(err.message);
-        // }
     };
 
     return (
