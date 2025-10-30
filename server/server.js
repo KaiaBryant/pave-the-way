@@ -40,6 +40,7 @@ app.post('/api/input', async (req, res) => {
       time,
       day,
     } = req.body;
+
     try {
       const generatedRes = await generateRoute(
         Number(originZipcode),
@@ -49,9 +50,11 @@ app.post('/api/input', async (req, res) => {
         day
       );
       console.log('Generated route response:', generatedRes);
+
       // Storing generated route to the database (waiting for database creation)
       //   const [result] = await db.query('INSERT INTO table_name (user_route, direction) VALUES (?, ?)', [generatedRes.user_input, generatedRes.text_direction]);
       //   console.log('Stored generated route to the backend', result);
+
       res.json(generatedRes);
     } catch (err) {
       console.log('Error fetching generated route from Perplexity:' + err);
@@ -69,7 +72,6 @@ app.get('/contact', (req, res) => {
 
 // Handle form submissions
 app.post('/contact', async (req, res) => {
-
   try {
     console.log('Incoming form data:', req.body);
 
@@ -161,5 +163,5 @@ app.post('/contact', async (req, res) => {
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

@@ -4,8 +4,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Survey from './pages/Survey';
 import Contact from './pages/Contact';
-
-import Dummy from './pages/dummyResults';
+import Result from './pages/dummyResults';
 
 export default function App() {
   return (
@@ -15,7 +14,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/survey" element={<Survey />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/dummypage" element={<Dummy />} />
+        <Route path="/result" element={<Result />} />
       </Routes>
       <Footer />
     </BrowserRouter>
