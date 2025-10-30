@@ -6,7 +6,6 @@ import dotenv from 'dotenv';
 import db from './db.js';
 import { fileURLToPath } from 'url';
 
-
 // Environment variables
 dotenv.config();
 
@@ -17,7 +16,6 @@ const PORT = process.env.PORT || 5000;
 // Middleware to parse JSON and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 // CORS setup
 const corsOptions = {
@@ -30,81 +28,133 @@ app.use(cors(corsOptions));
 
 // Test route
 app.get('/', (req, res) => {
-    res.send('Server is running and ready to accept connections.');
+  res.send('Server is running and ready to accept connections.');
 });
 
 app.post('/api/input', async (req, res) => {
-    try {
-        // console.log(req.body);
-        let originZipcode = 28205;
-        let destinationZipcode = 28208;
-        let transportationMethod = 'bike';
-        let time = '8:00 AM';
-        let day = 'Tuesday';
+  try {
+    const {
+      originZipcode,
+      destinationZipcode,
+      transportationMethod,
+      time,
+      day,
+    } = req.body;
 
-        try {
-            const generatedRes = await generateRoute(
-                originZipcode,
-                destinationZipcode,
-                transportationMethod,
-                time,
-                day
-            );
-            console.log('Generated route response:', generatedRes);
-            res.json(generatedRes);
-        } catch (err) {
-            console.log('Error fetching generated route from Perplexity:' + err);
-            res.json({ error: 'Error fetching generated route from Perplexity' });
-        }
+    try {
+      const generatedRes = await generateRoute(
+        Number(originZipcode),
+        Number(destinationZipcode),
+        transportationMethod,
+        time,
+        day
+      );
+      console.log('Generated route response:', generatedRes);
+
+      // Storing generated route to the database (waiting for database creation)
+      //   const [result] = await db.query('INSERT INTO table_name (user_route, direction) VALUES (?, ?)', [generatedRes.user_input, generatedRes.text_direction]);
+      //   console.log('Stored generated route to the backend', result);
+
+      res.json(generatedRes);
     } catch (err) {
-        console.log(`Error fetching AI-generated response: ${err}`);
+      console.log('Error fetching generated route from Perplexity:' + err);
+      res.json({ error: 'Error fetching generated route from Perplexity' });
     }
+  } catch (err) {
+    console.log(`Error fetching AI-generated response: ${err}`);
+  }
 });
 
 // Render contact
 app.get('/contact', (req, res) => {
-    res.render('contact', { title: 'Contact' });
+  res.render('contact', { title: 'Contact' });
 });
 
 // Handle form submissions
 app.post('/contact', async (req, res) => {
-    try {
-        console.log('Incoming form data:', req.body);
+  try {
+    console.log('Incoming form data:', req.body);
 
-        const { first_name, last_name, gender, ethnicity, email, phone_number, zipcode } = req.body;
+    const {
+      first_name,
+      last_name,
+      gender,
+      ethnicity,
+      email,
+      phone_number,
+      zipcode,
+    } = req.body;
 
-        if (!first_name || !last_name || !gender || !ethnicity || !email || !phone_number || !zipcode) {
-            return res.status(400).json({ error: 'All fields are required' });
-        }
-
-
-        // Check email
-        const [existingEmail] = await db.query('SELECT id FROM contact WHERE email = ?', [email]);
-        if (existingEmail.length > 0) {
-            return res.status(409).json({ error: 'Email already registered, please sign in!' });
-        }
-        const [columns] = await db.query('SHOW COLUMNS FROM contact;'); //shows the columns in the users table
-        console.log(columns.map(c => c.Field));
-        // Insert new user into the database
-        const [tableCheck] = await db.query('SHOW TABLES;');
-        console.log('Tables found:', tableCheck.map(t => Object.values(t)[0]));
-
-        const [result] = await db.query(
-            'INSERT INTO contact (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
-        );
-
-        // Send success response
-        res.status(201).json({
-            message: `Welcome ${first_name}!`,
-            userId: result.insertId,
-        });
-    } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ error: 'An error occurred during registration' });
+    if (
+      !first_name ||
+      !last_name ||
+      !gender ||
+      !ethnicity ||
+      !email ||
+      !phone_number ||
+      !zipcode
+    ) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
-});
 
+    try {
+      console.log('Incoming form data:', req.body);
+
+      const {
+        first_name,
+        last_name,
+        gender,
+        ethnicity,
+        email,
+        phone_number,
+        zipcode,
+      } = req.body;
+
+      if (
+        !first_name ||
+        !last_name ||
+        !gender ||
+        !ethnicity ||
+        !email ||
+        !phone_number ||
+        !zipcode
+      ) {
+        return res.status(400).json({ error: 'All fields are required' });
+      }
+
+      // Check email
+      const [existingEmail] = await db.query(
+        'SELECT id FROM contact WHERE email = ?',
+        [email]
+      );
+      if (existingEmail.length > 0) {
+        return res
+          .status(409)
+          .json({ error: 'Email already registered, please sign in!' });
+      }
+      const [columns] = await db.query('SHOW COLUMNS FROM contact;'); //shows the columns in the users table
+      console.log(columns.map((c) => c.Field));
+      // Insert new user into the database
+      const [tableCheck] = await db.query('SHOW TABLES;');
+      console.log(
+        'Tables found:',
+        tableCheck.map((t) => Object.values(t)[0])
+      );
+
+      const [result] = await db.query(
+        'INSERT INTO contact (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
+      );
+
+      // Send success response
+      res.status(201).json({
+        message: `Welcome ${first_name}!`,
+        userId: result.insertId,
+      });
+    } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).json({ error: 'An error occurred during registration' });
+    }
 
 // Render register
 app.get('/register', (req, res) => {
@@ -187,9 +237,7 @@ app.post('/login', async (req, res) => {
 
 
 
-
-
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
