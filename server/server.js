@@ -28,138 +28,78 @@ app.use(cors(corsOptions));
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('Server is running and ready to accept connections.');
+    res.send('Server is running and ready to accept connections.');
 });
 
 app.post('/api/input', async (req, res) => {
-  try {
-    const {
-      originZipcode,
-      destinationZipcode,
-      transportationMethod,
-      time,
-      day,
-    } = req.body;
-
     try {
-      const generatedRes = await generateRoute(
-        Number(originZipcode),
-        Number(destinationZipcode),
-        transportationMethod,
-        time,
-        day
-      );
-      console.log('Generated route response:', generatedRes);
+        const { originZipcode, destinationZipcode, transportationMethod, time, day } = req.body;
 
-      // Storing generated route to the database (waiting for database creation)
-      //   const [result] = await db.query('INSERT INTO table_name (user_route, direction) VALUES (?, ?)', [generatedRes.user_input, generatedRes.text_direction]);
-      //   console.log('Stored generated route to the backend', result);
+        try {
+            const generatedRes = await generateRoute(
+                Number(originZipcode),
+                Number(destinationZipcode),
+                transportationMethod,
+                time,
+                day
+            );
 
-      res.json(generatedRes);
+            console.log('Generated route response:', generatedRes);
+            res.json(generatedRes);
+
+        } catch (err) {
+            console.log('Error fetching generated route from Perplexity:' + err);
+            res.json({ error: 'Error fetching generated route from Perplexity' });
+        }
     } catch (err) {
-      console.log('Error fetching generated route from Perplexity:' + err);
-      res.json({ error: 'Error fetching generated route from Perplexity' });
+        console.log(`Error fetching AI-generated response: ${err}`);
     }
-  } catch (err) {
-    console.log(`Error fetching AI-generated response: ${err}`);
-  }
 });
 
-// Render contact
+// ================== CONTACT FORM ==================
+
 app.get('/contact', (req, res) => {
-  res.render('contact', { title: 'Contact' });
+    res.render('contact', { title: 'Contact' });
 });
 
-// Handle form submissions
 app.post('/contact', async (req, res) => {
-  try {
-    console.log('Incoming form data:', req.body);
-
-    const {
-      first_name,
-      last_name,
-      gender,
-      ethnicity,
-      email,
-      phone_number,
-      zipcode,
-    } = req.body;
-
-    if (
-      !first_name ||
-      !last_name ||
-      !gender ||
-      !ethnicity ||
-      !email ||
-      !phone_number ||
-      !zipcode
-    ) {
-      return res.status(400).json({ error: 'All fields are required' });
-    }
-
     try {
-      console.log('Incoming form data:', req.body);
+        console.log('Incoming form data:', req.body);
 
-      const {
-        first_name,
-        last_name,
-        gender,
-        ethnicity,
-        email,
-        phone_number,
-        zipcode,
-      } = req.body;
+        const { first_name, last_name, gender, ethnicity, email, phone_number, zipcode } = req.body;
 
-      if (
-        !first_name ||
-        !last_name ||
-        !gender ||
-        !ethnicity ||
-        !email ||
-        !phone_number ||
-        !zipcode
-      ) {
-        return res.status(400).json({ error: 'All fields are required' });
-      }
+        if (!first_name || !last_name || !gender || !ethnicity || !email || !phone_number || !zipcode) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
 
-      // Check email
-      const [existingEmail] = await db.query(
-        'SELECT id FROM contact WHERE email = ?',
-        [email]
-      );
-      if (existingEmail.length > 0) {
-        return res
-          .status(409)
-          .json({ error: 'Email already registered, please sign in!' });
-      }
-      const [columns] = await db.query('SHOW COLUMNS FROM contact;'); //shows the columns in the users table
-      console.log(columns.map((c) => c.Field));
-      // Insert new user into the database
-      const [tableCheck] = await db.query('SHOW TABLES;');
-      console.log(
-        'Tables found:',
-        tableCheck.map((t) => Object.values(t)[0])
-      );
+        // Check email exists
+        const [existingEmail] = await db.query('SELECT id FROM contact WHERE email = ?', [email]);
+        if (existingEmail.length > 0) {
+            return res.status(409).json({ error: 'Email already registered, please sign in!' });
+        }
 
-      const [result] = await db.query(
-        'INSERT INTO contact (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
-      );
+        const [result] = await db.query(
+            'INSERT INTO contact (first_name, last_name, gender, ethnicity, email, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [first_name, last_name, gender, ethnicity, email, phone_number, zipcode]
+        );
 
-      // Send success response
-      res.status(201).json({
-        message: `Welcome ${first_name}!`,
-        userId: result.insertId,
-      });
+        res.status(201).json({
+            message: `Welcome ${first_name}!`,
+            userId: result.insertId,
+        });
+
     } catch (error) {
-      console.error('Registration error:', error);
-      res.status(500).json({ error: 'An error occurred during registration' });
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'An error occurred during registration' });
     }
+});
 
-// Render register
+// ================== REGISTER ==================
+
 app.get('/register', (req, res) => {
     res.render('register', { title: 'Register' });
 });
+
 app.post('/register', async (req, res) => {
     try {
         console.log('Incoming form data:', req.body);
@@ -170,39 +110,33 @@ app.post('/register', async (req, res) => {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
-
-        // Check email
         const [existingEmail] = await db.query('SELECT id FROM account WHERE email = ?', [email]);
         if (existingEmail.length > 0) {
             return res.status(409).json({ error: 'Email already registered, please sign in!' });
         }
-        const [columns] = await db.query('SHOW COLUMNS FROM account;'); //shows the columns in the account table
-        console.log(columns.map(c => c.Field));
-        // Insert new user into the database
-        const [tableCheck] = await db.query('SHOW TABLES;');
-        console.log('Tables found:', tableCheck.map(t => Object.values(t)[0]));
 
         const [result] = await db.query(
             'INSERT INTO account (first_name, last_name, gender, ethnicity, email, password, phone_number, zipcode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [first_name, last_name, gender, ethnicity, email, password, phone_number, zipcode]
         );
 
-        // Send success response
         res.status(201).json({
             message: `Welcome ${first_name}!`,
             userId: result.insertId,
         });
+
     } catch (error) {
         console.error('Registration error:', error);
         res.status(500).json({ error: 'An error occurred during registration' });
     }
 });
 
-// Login
+// ================== LOGIN ==================
 
 app.get('/login', (req, res) => {
     res.render('login', { title: 'Login' });
 });
+
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -211,7 +145,6 @@ app.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Email and password are required' });
         }
 
-        // Check if user exists
         const [users] = await db.query('SELECT * FROM account WHERE email = ?', [email]);
 
         if (users.length === 0) {
@@ -220,7 +153,6 @@ app.post('/login', async (req, res) => {
 
         const user = users[0];
 
-        // Simple password check (plain comparison)
         if (user.password !== password) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
@@ -229,15 +161,15 @@ app.post('/login', async (req, res) => {
             message: `Welcome back, ${user.first_name}!`,
             userId: user.id,
         });
+
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ error: 'An error occurred during login' });
     }
 });
 
+// ================== START SERVER ==================
 
-
-// Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
