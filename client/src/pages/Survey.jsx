@@ -18,7 +18,7 @@ export default function Survey() {
   const navigate = useNavigate();
 
   // Handle form submission logic here
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const zipRegex = /^\d{5}$/;
     if (!transport || !time || !day || !toZip || !fromZip) {
@@ -36,12 +36,47 @@ export default function Survey() {
     ) {
       console.log('Error: Please make valid selections for all fields');
     } else {
+      const generatedRes = await postInput(
+        fromZip,
+        toZip,
+        transport,
+        time,
+        day
+      );
+      console.log(
+        'Posted inputs => Returned generated response:',
+        generatedRes
+      );
       navigate('/result', {
-        state: { transport, time, day, toZip, fromZip },
+        state: { fromZip, toZip, transport, time, day },
       });
-      console.log({ transport, time, day, toZip, fromZip }); // Print out results
     }
   };
+
+  const postInput = async (fromZip, toZip, transport, time, day) => {
+    try {
+      const res = await fetch('/api/input', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          originZipcode: fromZip,
+          destinationZipcode: toZip,
+          transportationMethod: transport,
+          time,
+          day,
+        }),
+      });
+      if (!res.ok) throw new Error('HTTP Request Status Error:', res.status);
+      const data = res.json();
+      console.log('AI generated response:', data);
+      return data;
+    } catch (err) {
+      console.log('Error POST request to /api/input:', err);
+    }
+  };
+
   return (
     <div>
       <section className="survey-form-section">

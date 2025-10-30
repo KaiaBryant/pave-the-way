@@ -33,17 +33,18 @@ app.get('/', (req, res) => {
 
 app.post('/api/input', async (req, res) => {
   try {
-    // console.log(req.body);
-    let originZipcode = 28205;
-    let destinationZipcode = 28208;
-    let transportationMethod = 'bike';
-    let time = '8:00 AM';
-    let day = 'Tuesday';
+    const {
+      originZipcode,
+      destinationZipcode,
+      transportationMethod,
+      time,
+      day,
+    } = req.body;
 
     try {
       const generatedRes = await generateRoute(
-        originZipcode,
-        destinationZipcode,
+        Number(originZipcode),
+        Number(destinationZipcode),
         transportationMethod,
         time,
         day
