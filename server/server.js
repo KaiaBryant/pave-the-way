@@ -5,6 +5,12 @@ import path from 'path';
 import dotenv from 'dotenv';
 import db from './db.js';
 import { fileURLToPath } from 'url';
+import session from "express-session";
+
+
+//Compatiable import 
+import MySQLSession from "express-mysql-session";
+const MySQLStore = MySQLSession(session);
 
 // Environment variables
 dotenv.config();
@@ -12,6 +18,32 @@ dotenv.config();
 // Express setup
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// MySQL connection options
+const sessionStore = new MySQLStore({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT || 3306,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    clearExpired: true,
+    checkExpirationInterval: 900000,
+    expiration: 86400000
+});
+
+app.use(session({
+    key: "user_session",
+    secret: process.env.SESSION_SECRET || "supersecretkey123",
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 2,
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+    }
+}));
 
 // Middleware to parse JSON and form data
 app.use(express.json());
@@ -157,6 +189,13 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
+        // Store user session
+        req.session.user = {
+            id: user.id,
+            email: user.email,
+            first_name: user.first_name,
+        };
+
         res.json({
             message: `Welcome back, ${user.first_name}!`,
             userId: user.id,
@@ -166,6 +205,17 @@ app.post('/login', async (req, res) => {
         console.error('Login error:', error);
         res.status(500).json({ error: 'An error occurred during login' });
     }
+});
+
+// ================== CHECK SESSION USER ==================
+app.get("/api/me", (req, res) => {
+    if (req.session.user) {
+        return res.json({
+            loggedIn: true,
+            user: req.session.user,
+        });
+    }
+    res.json({ loggedIn: false });
 });
 
 // ================== START SERVER ==================

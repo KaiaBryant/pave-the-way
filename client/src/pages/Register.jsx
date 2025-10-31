@@ -121,7 +121,9 @@ export default function Register() {
                 const res = await fetch("http://localhost:3000/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
+                    credentials: "include",   // Allow cookies to be stored
                     body: JSON.stringify(formData),
+
                 });
 
                 const data = await res.json();
