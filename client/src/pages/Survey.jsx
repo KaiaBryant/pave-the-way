@@ -105,7 +105,7 @@ export default function Survey() {
                     </h2>
                 ) : (
                     <h2 className="text-xl font-semibold mb-2">
-                        Welcome, Guest! <a href="/login" className="text-blue-600 underline">Sign in here</a>
+                        Welcome, Guest! <a href="/register" className="text-blue-600 underline">Sign in here</a>
                     </h2>
                 )}
             </div>

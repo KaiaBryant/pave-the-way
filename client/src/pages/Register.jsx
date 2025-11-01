@@ -116,7 +116,7 @@ export default function Register() {
         } else {
             setError("");
             setMessage("Form validated. Sending data...");
-            navigate("/login")
+            navigate("/survey")
             try {
                 const res = await fetch("http://localhost:3000/register", {
                     method: "POST",
@@ -146,6 +146,12 @@ export default function Register() {
             } catch (err) {
                 setError(err.message);
             }
+
+            res.json({
+                success: true,
+                message: `Welcome ${first_name}!`,
+            });
+
         }
 
     };

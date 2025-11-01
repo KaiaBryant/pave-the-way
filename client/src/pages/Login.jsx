@@ -16,16 +16,18 @@ export default function Login() {
             const res = await fetch("http://localhost:3000/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                credentials: "include",
                 credentials: "include",   // Allow cookies to be stored
                 body: JSON.stringify({ email, password }),
             });
 
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Login failed");
-
-            // Redirect to survey page
-            navigate("/survey");
+            // Saves the user from server response
+            if (data.user) {
+                localStorage.setItem("user", JSON.stringify(data.user));
+            }
+            // Redirect to account
+            navigate("/account");
         } catch (err) {
             setError(err.message);
         }

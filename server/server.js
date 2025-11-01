@@ -163,6 +163,33 @@ app.post('/register', async (req, res) => {
     }
 });
 
+// ================== UPDATE ACCOUNT ==================
+app.put("/api/account", async (req, res) => {
+    if (!req.session.user) return res.status(401).json({ error: "Not logged in" });
+
+    const { first_name, last_name, email, phone_number, zipcode } = req.body;
+    const userId = req.session.user.id;
+
+    try {
+        await db.query(
+            `UPDATE account
+            SET first_name = ?, last_name = ?, email = ?, phone_number = ?, zipcode = ?
+            WHERE id = ?`,
+            [first_name, last_name, email, phone_number, zipcode, userId]
+        );
+
+        // Update session data too
+        req.session.user.first_name = first_name;
+        req.session.user.email = email;
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to update account" });
+    }
+});
+
+
 // ================== LOGIN ==================
 
 app.get('/login', (req, res) => {
@@ -198,7 +225,14 @@ app.post('/login', async (req, res) => {
 
         res.json({
             message: `Welcome back, ${user.first_name}!`,
-            userId: user.id,
+            user: {
+                id: user.id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                phone_number: user.phone_number,
+                zipcode: user.zipcode
+            }
         });
 
     } catch (error) {
@@ -217,6 +251,69 @@ app.get("/api/me", (req, res) => {
     }
     res.json({ loggedIn: false });
 });
+
+// ================== GET ACCOUNT DATA ==================
+app.get("/api/account", async (req, res) => {
+    if (!req.session.user) {
+        return res.json({ loggedIn: false });
+    }
+
+    try {
+        const [rows] = await db.query(
+            "SELECT id, first_name, last_name, email, phone_number, zipcode FROM account WHERE id = ?",
+            [req.session.user.id]
+        );
+
+        const user = rows[0];
+
+        return res.json({
+            loggedIn: true,
+            user,
+            surveys: [] // placeholder until surveys table added
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error fetching account" });
+    }
+});
+
+
+// ================== LOGOUT ==================
+app.post("/api/logout", (req, res) => {
+    req.session.destroy(err => {
+        if (err) return res.status(500).json({ error: "Logout failed" });
+        res.json({ success: true });
+
+        res.clearCookie("user_session");
+        res.json({ message: "Logged out successfully" });
+    });
+});
+
+// ================== DELETE ACCOUNT ==================
+app.delete("/api/account", async (req, res) => {
+    if (!req.session.user) return res.status(401).json({ error: "Not logged in" });
+
+    const userId = req.session.user.id;
+
+    try {
+        // Optionally delete surveys too
+        // await db.query("DELETE FROM survey_inputs WHERE user_id = ?", [userId]);
+        await db.query("DELETE FROM account WHERE id = ?", [userId]);
+
+        req.session.destroy(() => {
+            res.clearCookie("user_session");
+            res.json({ message: "Account deleted" });
+            res.json({ success: true });
+        });
+
+    } catch (error) {
+        console.error("Delete error:", error);
+        res.status(500).json({ error: "Failed to delete account" });
+    }
+});
+
+
+
 
 // ================== START SERVER ==================
 
