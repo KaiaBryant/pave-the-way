@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import generateRoute from './perplexity.js';
+import { generateRoute, compareRoutes } from './perplexity.js';
 import path from 'path';
 import dotenv from 'dotenv';
 import db from './db.js';
@@ -64,6 +64,8 @@ app.post('/api/input', async (req, res) => {
     console.log(`Error fetching AI-generated response: ${err}`);
   }
 });
+
+app.post('/api/compare', async (req, res) => {});
 
 // Render contact
 app.get('/contact', (req, res) => {

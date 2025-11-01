@@ -3,165 +3,23 @@ import { useLocation } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import polyline from '@mapbox/polyline';
-
-// const map_direction = {
-//   profile: 'mapbox/cycling',
-//   coordinates: [
-//     [-80.8453, 35.1953],
-//     [-80.8443, 35.1962],
-//     [-80.8435, 35.1971],
-//     [-80.8427, 35.1981],
-//     [-80.8419, 35.1991],
-//     [-80.8409, 35.2002],
-//     [-80.8399, 35.2012],
-//     [-80.8389, 35.2022],
-//     [-80.8379, 35.2032],
-//     [-80.8369, 35.2042],
-//     [-80.8359, 35.2052],
-//     [-80.8349, 35.2062],
-//     [-80.8339, 35.2072],
-//     [-80.8329, 35.2082],
-//     [-80.8319, 35.2092],
-//     /////////
-//     // [-80.8493, 35.1914],
-//     // [-80.8356, 35.2011],
-//     // [-80.8249, 35.2123],
-//     // [-80.8142, 35.2235],
-//     // [-80.8035, 35.2347],
-//     /////////
-//     // [-80.842582, 35.215655],
-//     // [-80.839182, 35.216601],
-//     // [-80.8352, 35.217521],
-//     // [-80.830582, 35.218749],
-//     // [-80.826085, 35.219999],
-//     // [-80.822, 35.220999],
-//     // [-80.81835, 35.221833],
-//     // [-80.814, 35.222666],
-//     // [-80.809713, 35.223333],
-//     // [-80.805421, 35.224033],
-//     // [-80.801, 35.224666],
-//     // [-80.796621, 35.225333],
-//     // [-80.792217, 35.226],
-//     // [-80.787, 35.226666],
-//     // [-80.781828, 35.227333],
-//     // [-80.776601, 35.228],
-//     // [-80.771, 35.228666],
-//     // [-80.765333, 35.229],
-//     // [-80.759601, 35.229249],
-//     // [-80.754, 35.229499],
-//     // [-80.74835, 35.229666],
-//     // [-80.74265, 35.229833],
-//     // [-80.736, 35.23],
-//     // [-80.729, 35.230166],
-//     // [-80.722, 35.230333],
-//     // [-80.715, 35.230499],
-//     // [-80.708, 35.230666],
-//     // [-80.701, 35.230833],
-//     // [-80.694, 35.231],
-//     // [-80.687, 35.231166],
-//     // [-80.68002, 35.231333],
-//     // [-80.67295, 35.231499],
-//     // [-80.66573, 35.231666],
-//     // [-80.6585, 35.231833],
-//     // [-80.651, 35.232],
-//     // [-80.64333, 35.232166],
-//     // [-80.6355, 35.232333],
-//     // [-80.628, 35.232499],
-//     // [-80.62, 35.232666],
-//     // [-80.612, 35.232833],
-//     // [-80.604, 35.233],
-//     // [-80.596, 35.233166],
-//     // [-80.588, 35.233333],
-//     // [-80.5801, 35.233499],
-//     // [-80.5722, 35.233666],
-//     // [-80.5643, 35.233833],
-//     // [-80.5565, 35.234],
-//     // [-80.5487, 35.234166],
-//     // [-80.5409, 35.234333],
-//     // [-80.5332, 35.234499],
-//     // [-80.5254, 35.234666],
-//     // [-80.5177, 35.234833],
-//     // [-80.5101, 35.235],
-//     // [-80.5024, 35.235166],
-//     // [-80.4947, 35.235333],
-//     // [-80.4871, 35.235499],
-//     // [-80.4794, 35.235666],
-//     // [-80.4717, 35.235833],
-//     // [-80.464, 35.236],
-//     // [-80.4564, 35.236166],
-//     // [-80.4487, 35.236333],
-//     // [-80.441, 35.236499],
-//     // [-80.4334, 35.236666],
-//     // [-80.4257, 35.236833],
-//     // [-80.4181, 35.237],
-//     // [-80.4105, 35.237166],
-//     // [-80.4029, 35.237333],
-//     // [-80.3953, 35.237499],
-//     // [-80.3877, 35.237666],
-//     // [-80.3801, 35.237833],
-//     // [-80.3725, 35.238],
-//     // [-80.3649, 35.238166],
-//     // [-80.3573, 35.238333],
-//     // [-80.3497, 35.238499],
-//     // [-80.3421, 35.238666],
-//     // [-80.3345, 35.238833],
-//     // [-80.3269, 35.239],
-//     // [-80.3193, 35.239166],
-//     // [-80.3117, 35.239333],
-//     // [-80.3041, 35.239499],
-//     // [-80.2965, 35.239666],
-//     // [-80.2889, 35.239833],
-//     // [-80.2813, 35.24],
-//     // [-80.2737, 35.240166],
-//     // [-80.2661, 35.240333],
-//     // [-80.2585, 35.240499],
-//     // [-80.2509, 35.240666],
-//     // [-80.2433, 35.240833],
-//     // [-80.2357, 35.241],
-//     // [-80.2281, 35.241166],
-//     // [-80.2205, 35.241333],
-//     // [-80.2129, 35.241499],
-//     // [-80.2053, 35.241666],
-//     // [-80.1977, 35.241833],
-//     // [-80.1901, 35.242],
-//     // [-80.1825, 35.242166],
-//     // [-80.1749, 35.242333],
-//     // [-80.1673, 35.242499],
-//     // [-80.1597, 35.242666],
-//     // [-80.1521, 35.242833],
-//     // [-80.1445, 35.243],
-//     // [-80.1369, 35.243166],
-//     // [-80.1293, 35.243333],
-//     // [-80.1217, 35.243499],
-//     // [-80.1141, 35.243666],
-//     // [-80.1065, 35.243833],
-//     // [-80.0989, 35.244],
-//     // [-80.0913, 35.244166],
-//     // [-80.0837, 35.244333],
-//     // [-80.0761, 35.244499],
-//     // [-80.0685, 35.244666],
-//     // [-80.0609, 35.244833],
-//     // [-80.0533, 35.245],
-//     // [-80.0457, 35.245166],
-//     // [-80.0381, 35.245333],
-//     // [-80.0305, 35.245499],
-//     // [-80.0229, 35.245666],
-//     // [-80.0153, 35.245833],
-//     // [-80.0077, 35.246],
-//     // [-80.0001, 35.246166],
-//   ],
-// };
-
-// Fet
+import { useState } from 'react';
 
 export default function Dummy() {
   const surveyLocation = useLocation();
   const survey = surveyLocation.state;
 
+  const [comparedMetrics, setComparedMetrics] = useState(null);
+  const handleComparedMetrics = (data) => {
+    setComparedMetrics(data);
+    console.log('Compared metrics sent from Mapbox to parent page:', data);
+  };
+  console.log('Compared metrics:', comparedMetrics);
+
   return (
     <main>
       {survey ? (
-        <Mapbox survey={survey || {}} />
+        <Mapbox survey={survey || {}} sendMetrics={handleComparedMetrics} />
       ) : (
         <p>No survey data available.</p>
       )}
@@ -172,7 +30,7 @@ export default function Dummy() {
   );
 }
 
-function Mapbox({ survey }) {
+function Mapbox({ survey, sendMetrics }) {
   console.log(survey);
   console.log(survey.generatedRes);
   const { map_direction, text_direction, user_input } = survey.generatedRes;
@@ -184,10 +42,24 @@ function Mapbox({ survey }) {
     day,
   } = user_input;
 
+  const hypotheticalRoute = {
+    type: 'Feature',
+    geometry: {
+      type: 'LineString',
+      coordinates: map_direction.coordinates,
+    },
+    properties: {
+      routeType: 'hypothetical',
+      description: text_direction,
+    },
+  };
+
   const genMapContainerRef = useRef(null);
   const genMapRef = useRef(null);
   const currMapContainerRef = useRef(null);
   const currMapRef = useRef(null);
+
+  const [currMetrics, setCurrMetrics] = useState(null);
 
   useEffect(() => {
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_API_KEY;
@@ -200,15 +72,26 @@ function Mapbox({ survey }) {
     });
 
     genMapRef.current.on('load', async () => {
-      const formattedGenCoords = map_direction.coordinates
-        .map((pair) => pair.join(','))
-        .join(';');
+      if (genMapRef.current.getSource('hypothetical-route')) {
+        genMapRef.current.removeLayer('hypothetical-route');
+        genMapRef.current.removeSource('hypothetical-route');
+      }
 
-      await getMatchRoute(
-        genMapRef.current,
-        map_direction.profile,
-        formattedGenCoords
-      );
+      genMapRef.current.addSource('hypothetical-route', {
+        type: 'geojson',
+        data: hypotheticalRoute,
+      });
+
+      genMapRef.current.addLayer({
+        id: 'hypothetical-route-layer',
+        type: 'line',
+        source: 'hypothetical-route',
+        paint: {
+          'line-color': '#FF6B6B',
+          'line-width': 4,
+          'line-dasharray': [2, 2], // Dashed line to indicate it's not real
+        },
+      });
     });
 
     // Config of current optimal route's map
@@ -234,53 +117,96 @@ function Mapbox({ survey }) {
         .join(';');
       console.log(formattedCurrCoords);
 
-      await getDirectionRoute(
-        currMapRef.current,
+      const currMetrics = await getDirectionRoute(
         map_direction.profile,
         formattedCurrCoords
       );
+
+      async function compareRoutesWithMetrics(
+        hypotheticalRoute,
+        existingRoute
+      ) {
+        const comparison = {
+          hypothetical: {
+            distance_km: (
+              hypotheticalRoute.metrics.distance_meters / 1000
+            ).toFixed(2),
+            duration_min: (
+              hypotheticalRoute.metrics.duration_seconds / 60
+            ).toFixed(1),
+            cost_millions: (
+              hypotheticalRoute.metrics.construction_cost_usd / 1000000
+            ).toFixed(2),
+            carbon_saved: hypotheticalRoute.metrics.carbon_saved_kg.toFixed(2),
+            accessibility: hypotheticalRoute.metrics.accessibility_score,
+            population_served:
+              hypotheticalRoute.metrics.population_served.toLocaleString(),
+          },
+          existing: {
+            distance_km: (existingRoute.distance / 1000).toFixed(2),
+            duration_min: (existingRoute.duration / 60).toFixed(1),
+            carbon_emissions: ((existingRoute.distance / 1000) * 0.171).toFixed(
+              2
+            ),
+          },
+          improvements: {
+            time_saved: hypotheticalRoute.metrics.time_saved_minutes,
+            distance_saved_percent: (
+              ((existingRoute.distance -
+                hypotheticalRoute.metrics.distance_meters) /
+                existingRoute.distance) *
+              100
+            ).toFixed(1),
+            roi_estimate: calculateROI(hypotheticalRoute.metrics),
+          },
+        };
+
+        return comparison;
+      }
+
+      function calculateROI(metrics) {
+        // Simple ROI: (Annual benefits / Construction cost) * 100
+        const dailyUsers = metrics.population_served * 0.1; // Assume 10% daily usage
+        const annualTimeSavings = dailyUsers * metrics.time_saved_minutes * 365;
+        const annualBenefit = (annualTimeSavings / 60) * 25; // $25/hour value of time
+
+        return {
+          annual_benefit_usd: Math.round(annualBenefit),
+          payback_years: (
+            metrics.construction_cost_usd / annualBenefit
+          ).toFixed(1),
+        };
+      }
+
+      const comparedMetrics = await compareRoutesWithMetrics(
+        survey.generatedRes,
+        currMetrics
+      );
+      sendMetrics(comparedMetrics);
+      console.log(
+        'Hypothetical route vs Current route compared metrics:',
+        comparedMetrics
+      );
+
+      const geojson = polyline.toGeoJSON(currMetrics.geometry);
+      renderRoute(currMapRef.current, geojson);
     });
   }, []);
 
   return (
     <div className="map-container">
       <div
-        style={{ height: '75vh', width: '100vw' }}
+        style={{ height: '75vh', width: '50vw' }}
         ref={genMapContainerRef}
         className="generatedRoute-container"
       />
       <div
-        style={{ height: '75vh', width: '100vw' }}
+        style={{ height: '75vh', width: '50vw' }}
         ref={currMapContainerRef}
         className="currentRoute-container"
       />
     </div>
   );
-}
-
-async function getMatchRoute(map, profile, coordinates) {
-  try {
-    const res = await fetch(
-      `https://api.mapbox.com/matching/v5/${profile}/${coordinates}.json?access_token=${
-        import.meta.env.VITE_MAPBOX_API_KEY
-      }`
-    );
-    if (!res.ok)
-      throw new Error('MapBox Matching HTTP Request Error', res.status);
-    const data = await res.json();
-    console.log('Match API Response:', data);
-    if (data.code === 'NoMatch') {
-      // WARNING: Create fail safe for no match
-      console.log('No match found for coordinates');
-      return;
-    }
-    const matchRoute = data.matchings[0].geometry;
-    const geojson = polyline.toGeoJSON(matchRoute);
-
-    renderRoute(map, geojson);
-  } catch (err) {
-    console.log('Error rendering route:', err);
-  }
 }
 
 function renderRoute(map, geojson) {
@@ -293,7 +219,6 @@ function renderRoute(map, geojson) {
     type: 'geojson',
     data: {
       type: 'Feature',
-      properties: {},
       geometry: geojson,
     },
   });
@@ -330,7 +255,7 @@ async function geocode(location) {
   }
 }
 
-async function getDirectionRoute(map, profile, coordinates) {
+async function getDirectionRoute(profile, coordinates) {
   try {
     const res = await fetch(
       `https://api.mapbox.com/directions/v5/${profile}/${coordinates}.json?access_token=${
@@ -341,10 +266,13 @@ async function getDirectionRoute(map, profile, coordinates) {
       throw new Error('MapBox Direction HTTP Request Error', res.status);
     const data = await res.json();
     console.log('Direction API Response:', data);
-    const currRoute = data.routes[0].geometry;
-    const geojson = polyline.toGeoJSON(currRoute);
+    const currRoute = data.routes[0];
 
-    renderRoute(map, geojson);
+    return {
+      distance: currRoute.distance,
+      duration: currRoute.duration,
+      geometry: currRoute.geometry,
+    };
   } catch (err) {
     console.log('Error fetching directions:', err);
   }
