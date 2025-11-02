@@ -3,9 +3,9 @@ import Perplexity from '@perplexity-ai/perplexity_ai';
 
 const client = new Perplexity({ apiKey: process.env.PERPLEXITY_API_KEY });
 
-export async function generateRoute(
-  originZipcode,
-  destinationZipcode,
+export default async function generateRoute(
+  originAddress,
+  destinationAddress,
   transportationMethod,
   time,
   day
@@ -20,7 +20,7 @@ export async function generateRoute(
         },
         {
           role: 'user',
-          content: `Generate coordinates for a NEW, NON-EXISTENT transportation route in Charlotte, NC from ${originZipcode} to ${destinationZipcode}. This route should:
+          content: `Generate coordinates for a NEW, NON-EXISTENT transportation route in Charlotte, NC from ${originAddress} to ${destinationAddress}. This route should:
                 - Connect the two points via a straight or optimized path that IGNORES existing roads
                 - Consider natural obstacles (rivers, lakes, protected areas)
                 - Suggest new infrastructure (bridges, tunnels, dedicated lanes) where beneficial
@@ -173,53 +173,14 @@ export async function generateRoute(
 
     return {
       user_input: {
-        origin_zipcode: originZipcode,
-        destination_zipcode: destinationZipcode,
+        origin_address: originAddress,
+        destination_address: destinationAddress,
         transportation_method: transportationMethod,
         time,
         day,
       },
       ...response,
     };
-  } catch (err) {
-    console.log('Failed to fetch response from Perplexity:', err);
-  }
-}
-
-export async function compareRoutes(genRoute, currRoute) {
-  try {
-    const completion = await client.chat.completions.create({
-      model: 'sonar',
-      messages: [
-        {
-          role: 'system',
-          content: `You are a data analyst who compares and contrasts the time saved, saved carbon emission, energy consumption, accessibility of routes.`,
-        },
-        {
-          role: 'user',
-          content: `Generate a JSON with a "generated_route" property that is an object with the properties: time saved, saved carbon emission, energy consumption, accessibility of the ${genRoute} route; assign to those properties your projected metrics accordingly. Do the same for the "current_route", but based on the ${currRoute} route. Additionally, that JSON will have a "compared_metrics" property with the same properties as the "generated_route" and "curent_route" properties, but with the compared metrics between ${genRoute} and ${currRoute}. In comparison, provide which one of the route is better.`,
-        },
-      ],
-      response_format: {
-        type: 'json_schema',
-        json_schema: {
-          schema: {
-            type: 'object',
-            properties: {
-              generated_route: { type: 'object' },
-              current_route: { type: 'object' },
-              compared_metrics: { type: 'object' },
-            },
-            required: ['generated_route', 'current_route', 'compared_metrics'],
-          },
-        },
-      },
-    });
-
-    const response = JSON.parse(completion.choices[0].message.content);
-    console.log('Perplexity routes compared metrics:', response);
-
-    return response;
   } catch (err) {
     console.log('Failed to fetch response from Perplexity:', err);
   }

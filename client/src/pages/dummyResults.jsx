@@ -14,7 +14,6 @@ export default function Dummy() {
     setComparedMetrics(data);
     console.log('Compared metrics sent from Mapbox to parent page:', data);
   };
-  console.log('Compared metrics:', comparedMetrics);
 
   return (
     <main>
@@ -26,6 +25,8 @@ export default function Dummy() {
       <p>
         HYPOTHETICAL ROUTE'S DIRECTIONS: {survey.generatedRes.text_direction}
       </p>
+      <p>Compared Metrics: {JSON.stringify(comparedMetrics)}</p>
+      {/* stringified the metrics so that we could see what's in the obj; pls refer to the properties when trying to display it */}
     </main>
   );
 }
@@ -35,8 +36,8 @@ function Mapbox({ survey, sendMetrics }) {
   console.log(survey.generatedRes);
   const { map_direction, text_direction, user_input } = survey.generatedRes;
   const {
-    origin_zipcode,
-    destination_zipcode,
+    origin_address,
+    destination_address,
     transportation_method,
     time,
     day,
@@ -83,13 +84,17 @@ function Mapbox({ survey, sendMetrics }) {
       });
 
       genMapRef.current.addLayer({
-        id: 'hypothetical-route-layer',
+        id: 'hypothetical-route',
         type: 'line',
         source: 'hypothetical-route',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
         paint: {
           'line-color': '#FF6B6B',
-          'line-width': 4,
-          'line-dasharray': [2, 2], // Dashed line to indicate it's not real
+          'line-width': 2,
+          'line-dasharray': [2, 2],
         },
       });
     });
@@ -102,9 +107,9 @@ function Mapbox({ survey, sendMetrics }) {
     });
 
     currMapRef.current.on('load', async () => {
-      const originGeocode = await geocode(origin_zipcode);
+      const originGeocode = await geocode(origin_address);
       const originCoords = originGeocode.features[0].geometry.coordinates;
-      const destinationGeocode = await geocode(destination_zipcode);
+      const destinationGeocode = await geocode(destination_address);
       const destinationCoords =
         destinationGeocode.features[0].geometry.coordinates;
       console.log('Origin coordinates:', originCoords);
@@ -232,7 +237,7 @@ function renderRoute(map, geojson) {
       'line-cap': 'round',
     },
     paint: {
-      'line-color': '#880808',
+      'line-color': '#0047AB',
       'line-width': 2,
     },
   });
