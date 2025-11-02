@@ -24,7 +24,8 @@ export default function Survey() {
     const [day, setDay] = useState('');
     const [toAddress, setToAddress] = useState('');
     const [fromAddress, setFromAddress] = useState('');
-
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     // Handle individual dropdowns
     const handleTransportClick = (e) => setTransport(e.target.value);
     const handleTimeClick = (e) => setTime(e.target.value);
@@ -40,12 +41,14 @@ export default function Survey() {
             /^(\d{1,}) [a-zA-Z0-9\s]+(\,)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}$/;
 
         if (!transport || !time || !day || !toAddress || !fromAddress) {
-            return alert("Please fill in all fields before submitting");
+            return setError("Please fill in all fields before submitting");
         }
 
         if (!addressRegex.test(toAddress) || !addressRegex.test(fromAddress)) {
-            return alert("Must insert a valid address");
+            return setError("Must insert a valid address");
         }
+        setError('')
+        setSuccess('Success: Results Loading...')
 
         // Generate AI results
         const generatedRes = await postInput(
@@ -55,6 +58,7 @@ export default function Survey() {
             time,
             day
         );
+
 
         console.log("Posted inputs => Returned generated response:", generatedRes);
 
@@ -236,6 +240,8 @@ export default function Survey() {
                             Submit
                         </button>
                     </div>
+                    {error && <span id="error-message" style={{ color: "red" }}>{error}</span>}
+                    {success && <span id="success-message" style={{ color: "green" }}>{success}</span>}
                 </form>
             </section>
         </div>

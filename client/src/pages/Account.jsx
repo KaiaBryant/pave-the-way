@@ -100,13 +100,13 @@ export default function Account() {
                         <p><strong>Zip:</strong> {user.zipcode}</p>
                     </div>
 
-                    <button className="btn-primary" onClick={() => setEditing(true)}>
+                    <button className="edit-btn" onClick={() => setEditing(true)}>
                         Edit Profile
                     </button>
-                    <button className="btn-secondary" onClick={handleLogout}>
+                    <button className="edit-btn" onClick={handleLogout}>
                         Logout
                     </button>
-                    <button className="btn-danger" onClick={handleDelete}>
+                    <button className="edit-btn delete-btn" onClick={handleDelete}>
                         Delete Account
                     </button>
                 </>
@@ -116,33 +116,38 @@ export default function Account() {
                         value={form.first_name}
                         onChange={(e) => setForm({ ...form, first_name: e.target.value })}
                         placeholder="First Name"
+                        className="edit-input"
                         required
                     />
                     <input
                         value={form.last_name}
                         onChange={(e) => setForm({ ...form, last_name: e.target.value })}
                         placeholder="Last Name"
+                        className="edit-input"
                         required
                     />
                     <input
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                         placeholder="Email"
+                        className="edit-input"
                         required
                     />
                     <input
                         value={form.phone_number}
                         onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
                         placeholder="Phone Number"
+                        className="edit-input"
                     />
                     <input
                         value={form.zipcode}
                         onChange={(e) => setForm({ ...form, zipcode: e.target.value })}
                         placeholder="Zip Code"
+                        className="edit-input"
                     />
 
-                    <button className="btn-primary" type="submit">Save Changes</button>
-                    <button className="btn-secondary" onClick={() => setEditing(false)} type="button">
+                    <button className="btn-primary save-btn" type="submit">Save Changes</button>
+                    <button className="btn-secondary cancel-btn" onClick={() => setEditing(false)} type="button">
                         Cancel
                     </button>
                 </form>
@@ -151,26 +156,25 @@ export default function Account() {
             {data.surveys.length === 0 ? (
                 <p>No surveys submitted yet.</p>
             ) : (
-                <table className="survey-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Hypothetical</th>
-                            <th>Existing</th>
-                            <th>Improvements</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.surveys.map((s, i) => (
-                            <tr key={i}>
-                                <td>{new Date(s.created_at).toLocaleString()}</td>
-                                <td>{JSON.stringify(s.hypothetical)}</td>
-                                <td>{JSON.stringify(s.existing)}</td>
-                                <td>{JSON.stringify(s.improvements)}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="all-surveys-container">
+                    <h1 className="survey-header">Your Surveys</h1>
+                    {data.surveys.map((s, i) => (
+                        <div className="survey-container">
+                            <h3>Survey #{i + 1}</h3>
+                            <div><strong>Existing:</strong>{JSON.parse(JSON.stringify(s.existing)).replace(/[@!#$"'/{},_]/g, ' ')}</div>
+                            <div><strong>Hypothetical:</strong>{JSON.parse(JSON.stringify(s.hypothetical)).replace(/[@!#$"'/{},_]/g, ' ')}</div>
+                            <div><strong>Improvements:</strong>{JSON.parse(JSON.stringify(s.improvements)).replace(/[@!#$"'/{},_]/g, ' ')}</div>
+                        </div>
+                        // <tr key={i}>
+                        //     <td className="column-1">{new Date(s.created_at).toLocaleString()}</td>
+                        //     <td className="column-2">{JSON.parse(JSON.stringify(s.hypothetical)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
+                        //     <td className="column-3">{JSON.parse(JSON.stringify(s.hypothetical)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
+                        //     <td className="column-4">{JSON.parse(JSON.stringify(s.improvements)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
+                        //     <td>{JSON.stringify(s.hypothetical.duration_min)}</td>
+                        // </tr>
+                    ))}
+
+                </div>
             )}
 
         </div>
