@@ -4,12 +4,27 @@ import { useState } from "react";
 import "../styles/Survey.css";
 
 export default function Survey() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/me', {
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.loggedIn) {
+          setUser(data.user);
+        }
+      });
+  }, []);
+
   // State for dropdown selections
-  const [transport, setTransport] = useState("");
-  const [time, setTime] = useState("");
-  const [day, setDay] = useState("");
-  const [toAddress, setToAddress] = useState("");
-  const [fromAddress, setFromAddress] = useState("");
+  const [transport, setTransport] = useState('');
+  const [time, setTime] = useState('');
+  const [day, setDay] = useState('');
+  const [toAddress, setToAddress] = useState('');
+  const [fromAddress, setFromAddress] = useState('');
+
   // Handle individual dropdowns
   const handleTransportClick = (e) => setTransport(e.target.value);
   const handleTimeClick = (e) => setTime(e.target.value);
@@ -23,17 +38,17 @@ export default function Survey() {
     const addressRegex =
       /^(\d{1,}) [a-zA-Z0-9\s]+(\,)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}$/;
     if (!transport || !time || !day || !toAddress || !fromAddress) {
-      alert("Please fill in all fields before submitting");
+      alert('Please fill in all fields before submitting');
     }
     if (!addressRegex.test(toAddress) || !addressRegex.test(fromAddress)) {
-      alert("Must insert a valid address");
+      alert('Must insert a valid address');
       return;
     } else if (
-      transport === "select" ||
-      time === "select" ||
-      day === "select" ||
-      toAddress === "select" ||
-      fromAddress === "select"
+      transport === 'select' ||
+      time === 'select' ||
+      day === 'select' ||
+      toAddress === 'select' ||
+      fromAddress === 'select'
     ) {
       console.log("Error: Please make valid selections for all fields");
     } else {
@@ -54,7 +69,7 @@ export default function Survey() {
     }
   };
 
-  const postInput = async (fromZip, toZip, transport, time, day) => {
+  const postInput = async (fromAddress, toAddress, transport, time, day) => {
     try {
       const res = await fetch("/api/input", {
         method: "POST",
@@ -62,8 +77,8 @@ export default function Survey() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          originZipcode: fromZip,
-          destinationZipcode: toZip,
+          originAddress: fromAddress,
+          destinationAddress: toAddress,
           transportationMethod: transport,
           time,
           day,
