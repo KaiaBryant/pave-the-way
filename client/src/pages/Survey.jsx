@@ -35,39 +35,66 @@ export default function Survey() {
     // Handle form submission logic here
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const addressRegex =
             /^(\d{1,}) [a-zA-Z0-9\s]+(\,)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}$/;
+
         if (!transport || !time || !day || !toAddress || !fromAddress) {
-            alert('Please fill in all fields before submitting');
+            return alert("Please fill in all fields before submitting");
         }
+
         if (!addressRegex.test(toAddress) || !addressRegex.test(fromAddress)) {
-            alert('Must insert a valid address');
-            return;
-        } else if (
-            transport === 'select' ||
-            time === 'select' ||
-            day === 'select' ||
-            toAddress === 'select' ||
-            fromAddress === 'select'
-        ) {
-            console.log("Error: Please make valid selections for all fields");
+            return alert("Must insert a valid address");
+        }
+
+        // Generate AI results
+        const generatedRes = await postInput(
+            fromAddress,
+            toAddress,
+            transport,
+            time,
+            day
+        );
+
+        console.log("Posted inputs => Returned generated response:", generatedRes);
+
+        //  If user is logged in → save their survey results to DB
+        if (user && user.email) {
+            try {
+                await fetch("http://localhost:3000/api/survey/results", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        email: user.email,
+                        hypothetical: generatedRes?.metrics || generatedRes || {},
+                        existing: generatedRes?.currentRoute || null,
+                        improvements: generatedRes?.improvements || null,
+                        additional_info: "Submitted from Survey page"
+                    }),
+                });
+
+                console.log("Survey saved!", user.email);
+            } catch (error) {
+                console.error("Failed to save survey:", error);
+            }
         } else {
-            const generatedRes = await postInput(
+            console.log("User not logged in — skipping DB save.");
+        }
+
+        // Navigate to results page with data
+        navigate("/result", {
+            state: {
                 fromAddress,
                 toAddress,
                 transport,
                 time,
-                day
-            );
-            console.log(
-                "Posted inputs => Returned generated response:",
+                day,
                 generatedRes
-            );
-            navigate("/result", {
-                state: { fromAddress, toAddress, transport, time, day },
-            });
-        }
+            },
+        });
     };
+
 
     const postInput = async (fromAddress, toAddress, transport, time, day) => {
         try {
