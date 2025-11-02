@@ -3,7 +3,10 @@ import { useLocation } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import polyline from '@mapbox/polyline';
+import '../styles/dummyResults.css'
 import { useState } from 'react';
+import { Carousel } from 'react-bootstrap';
+import pic from '../assets/ptw.png'
 
 export default function Dummy() {
   const surveyLocation = useLocation();
@@ -15,6 +18,7 @@ export default function Dummy() {
     console.log('Compared metrics sent from Mapbox to parent page:', data);
   };
 
+
   return (
     <main>
       {survey ? (
@@ -22,11 +26,38 @@ export default function Dummy() {
       ) : (
         <p>No survey data available.</p>
       )}
-      <p>
-        HYPOTHETICAL ROUTE'S DIRECTIONS: {survey.generatedRes.text_direction}
+      <p className='fs-5 mb-8 directions'>
+        <strong>Directions for the proposed route:</strong> {survey.generatedRes.text_direction}
       </p>
       <p>Compared Metrics: {JSON.stringify(comparedMetrics)}</p>
-      {/* stringified the metrics so that we could see what's in the obj; pls refer to the properties when trying to display it */}
+
+
+
+      {/* Below is a bootstrap carousel component */}
+      <Carousel className='carousel'
+        prevIcon={<span aria-hidden="true" className="custom-prev">‹</span>}
+        nextIcon={<span aria-hidden="true" className="custom-next">›</span>}>
+        <Carousel.Item>
+
+          <h3>First slide label</h3>
+          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+
+        </Carousel.Item>
+        <Carousel.Item>
+
+          <h3>Second slide label</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+        </Carousel.Item>
+        <Carousel.Item>
+
+          <h3>Third slide label</h3>
+          <p>
+            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+          </p>
+
+        </Carousel.Item>
+      </Carousel>
     </main>
   );
 }
@@ -199,18 +230,28 @@ function Mapbox({ survey, sendMetrics }) {
   }, []);
 
   return (
-    <div className="map-container">
-      <div
-        style={{ height: '75vh', width: '50vw' }}
-        ref={genMapContainerRef}
-        className="generatedRoute-container"
-      />
-      <div
-        style={{ height: '75vh', width: '50vw' }}
-        ref={currMapContainerRef}
-        className="currentRoute-container"
-      />
-    </div>
+    <>
+      <h1 className='results'>Results</h1>
+      <div className="map-container">
+        <div className='map1'>
+          <h1>Existing Route</h1>
+          <div
+            style={{ width: '100%', height: '100%' }}
+            ref={currMapContainerRef}
+            className="currentRoute-container"
+          />
+        </div>
+        <div className='map2'>
+          <h1>Hypothetical Route</h1>
+          <div
+            style={{ width: '100%', height: '100%' }}
+            ref={genMapContainerRef}
+            className="generatedRoute-container"
+          />
+        </div>
+
+      </div>
+    </>
   );
 }
 
@@ -246,8 +287,7 @@ function renderRoute(map, geojson) {
 async function geocode(location) {
   try {
     const res = await fetch(
-      `https://api.mapbox.com/search/geocode/v6/forward?q=${location}&access_token=${
-        import.meta.env.VITE_MAPBOX_API_KEY
+      `https://api.mapbox.com/search/geocode/v6/forward?q=${location}&access_token=${import.meta.env.VITE_MAPBOX_API_KEY
       }`
     );
     if (!res.ok)
@@ -263,8 +303,7 @@ async function geocode(location) {
 async function getDirectionRoute(profile, coordinates) {
   try {
     const res = await fetch(
-      `https://api.mapbox.com/directions/v5/${profile}/${coordinates}.json?access_token=${
-        import.meta.env.VITE_MAPBOX_API_KEY
+      `https://api.mapbox.com/directions/v5/${profile}/${coordinates}.json?access_token=${import.meta.env.VITE_MAPBOX_API_KEY
       }`
     );
     if (!res.ok)
