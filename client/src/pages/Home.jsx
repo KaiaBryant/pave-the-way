@@ -5,20 +5,24 @@ import "../styles/Home.css";
 export default function Home() {
   const data = [
     {
-      icon: "./src/assets/car.png",
-      message: "Reduce carbon emissions",
+      icon: "/src/assets/car.png",
+      title: "Roadway Improvements",
+      message: "Cleaner air through sustainable",
     },
     {
-      icon: "./src/assets/bus.png",
+      icon: "/src/assets/bus.png",
+      title: "Sustainable Mobility",
       message: "Eco-friendly transportation",
     },
     {
-      icon: "./src/assets/pedestrians.png",
-      message: "Connection between neighbors",
+      icon: "/src/assets/pedestrians.png",
+      title: "Pedestrian infrastructure",
+      message: "Walkable streets and crossings",
     },
     {
-      icon: "./src/assets/bicycle.png",
-      message: "Reduce carbon emissions",
+      icon: "/src/assets/bicycle.png",
+      title: "Network Expansion",
+      message: "Connected shared-use paths",
     },
   ];
   return (
@@ -39,7 +43,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="grid-cards--container">
+      <section className="cards--container">
         {data.map((d, index) => (
           <div className="card__image--container" key={index}>
             <div className="card__image--wrapper">
@@ -47,6 +51,7 @@ export default function Home() {
             </div>
 
             <div className="card__paragraph--container">
+              <p className="card-title">{d.title}</p>
               <p className="card-message">{d.message}</p>
             </div>
           </div>
