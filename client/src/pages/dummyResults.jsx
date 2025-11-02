@@ -19,6 +19,7 @@ export default function Dummy() {
   };
 
 
+
   return (
     <main>
       {survey ? (
@@ -29,35 +30,62 @@ export default function Dummy() {
       <p className='fs-5 mb-8 directions'>
         <strong>Directions for the proposed route:</strong> {survey.generatedRes.text_direction}
       </p>
-      <p>Compared Metrics: {JSON.stringify(comparedMetrics)}</p>
+      {/* <p>Compared Metrics: {JSON.stringify(comparedMetrics)}</p> */}
 
 
 
       {/* Below is a bootstrap carousel component */}
-      <Carousel className='carousel'
-        prevIcon={<span aria-hidden="true" className="custom-prev">‹</span>}
-        nextIcon={<span aria-hidden="true" className="custom-next">›</span>}>
-        <Carousel.Item>
-
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-
-        </Carousel.Item>
-        <Carousel.Item>
-
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-
-        </Carousel.Item>
-        <Carousel.Item>
-
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
-
-        </Carousel.Item>
-      </Carousel>
+      {comparedMetrics ? (
+        <div className='impact-container'>
+          <div className='metrics-description'>
+            <h1>What does this mean?</h1>
+            <p>Refer to the "Impact Metrics" section to see the effects of the implementation of your generated route.
+              There, you see the numbers that <strong>matter.</strong> The distance you would have to travel, the time you would spend on each route,
+              the compared carbon emissions, and how many people in surrounding communities would be served. We also understand that time
+              <strong> is money.</strong> The time saved is factored into the annual return on investment (ROI), valuing an hour of time at
+              an estimate of 25 dollars. The Accessibility Score is a number (0-100) indicating accessibility improvement to underserved areas.
+              With this analysis, you can see how your hypothetical route would drive positive change, serve communities, and most importantly,
+              serve <strong>you.</strong>
+            </p>
+          </div>
+          <div className='metrics-container'>
+            <h1>Impact Metrics</h1>
+            <Carousel className='carousel'
+              prevIcon={<span aria-hidden="true" className="custom-prev">‹</span>}
+              nextIcon={<span aria-hidden="true" className="custom-next">›</span>}>
+              <Carousel.Item className='carousel-content item1'>
+                <h3>Existing Route</h3>
+                <ul>
+                  <li><strong>Distance:</strong> {(comparedMetrics.existing.distance_km / 1.609344).toFixed(2)} mi</li>
+                  <li><strong>Duration:</strong> {comparedMetrics.existing.duration_min} min</li>
+                  <li><strong>Estimated Carbon Emissions:</strong> {comparedMetrics.existing.carbon_emissions} kg 𝐶𝑂2</li>
+                </ul>
+              </Carousel.Item>
+              <Carousel.Item className='carousel-content item2'>
+                <h3>Hypothetical Route</h3>
+                <ul>
+                  <li><strong>Distance:</strong> {(comparedMetrics.hypothetical.distance_km / 1.609344).toFixed(2)} mi</li>
+                  <li><strong>Duration:</strong> {comparedMetrics.hypothetical.duration_min} min</li>
+                  <li><strong>Estimated Carbon Saved:</strong> {comparedMetrics.hypothetical.carbon_saved} kg 𝐶𝑂2</li>
+                </ul>
+              </Carousel.Item>
+              <Carousel.Item className='carousel-content'>
+                <h3>Improvements</h3>
+                <ul>
+                  <li><strong>Estimated Population Served:</strong> {comparedMetrics.hypothetical.population_served}</li>
+                  <li><strong>Estimated annual ROI:</strong> ${comparedMetrics.improvements.roi_estimate.annual_benefit_usd}</li>
+                  <li><strong>Accessibility Score:</strong> {comparedMetrics.hypothetical.accessibility}</li>
+                  {comparedMetrics.improvements.distance_saved_percent > 0 && (
+                    <li><strong>Reduced Distance:</strong> {comparedMetrics.improvements.distance_saved_percent}%</li>
+                  )}
+                </ul>
+              </Carousel.Item>
+            </Carousel>
+          </div>
+        </div>
+      ) : (
+        <p>Loading metrics...</p>
+      )}
     </main>
   );
 }
@@ -231,7 +259,7 @@ function Mapbox({ survey, sendMetrics }) {
 
   return (
     <>
-      <h1 className='results'>Results</h1>
+      <h1 className='results'>Survey Results</h1>
       <div className="map-container">
         <div className='map1'>
           <h1>Existing Route</h1>
