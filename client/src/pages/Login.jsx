@@ -11,7 +11,13 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+        if (!password.trim() || !email.trim()) {
+            return setError("Please enter a valid email and password")
+        } else if (!emailRegex.test(email)) {
+            return setError("Please enter a valid email address")
+        }
         try {
             const res = await fetch("http://localhost:3000/login", {
                 method: "POST",
@@ -29,12 +35,12 @@ export default function Login() {
             // Redirect to account
             navigate("/account");
         } catch (err) {
-            setError(err.message);
+            setError("Log in Failed: Try Again");
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="main-container justify-content-center">
             <form
                 onSubmit={handleSubmit}
                 className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md"
@@ -42,12 +48,11 @@ export default function Login() {
                 <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
 
                 <input
-                    type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="border rounded-lg p-2 w-full mb-4"
-                    required
+                    className="border rounded-lg p-2 w-full mb-4 input-field"
+                    aria-label="Email"
                 />
 
                 <input
@@ -55,15 +60,15 @@ export default function Login() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="border rounded-lg p-2 w-full mb-4"
-                    required
+                    className="border rounded-lg p-2 w-full mb-4 input-field"
+                    aria-label="Password"
                 />
 
-                {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
+                {error && <p className="text-danger">{error}</p>}
 
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white w-full py-2 rounded-lg hover:bg-blue-700 transition"
+                    className="btn btn-lg btn-dark btn-primary transition d-block mx-auto"
                 >
                     Login
                 </button>
