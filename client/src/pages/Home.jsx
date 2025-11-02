@@ -1,26 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
+import car from "../assets/car.png"
+import bus from "../assets/bus.png"
+import pedestrians from "../assets/pedestrians.png"
+import bicycle from "../assets/bicycle.png"
+import video from "../assets/charlotte.mp4"
 
 export default function Home() {
   const data = [
     {
-      icon: "/src/assets/car.png",
+      icon: car,
       title: "Roadway Improvements",
       message: "Cleaner air through sustainable",
     },
     {
-      icon: "/src/assets/bus.png",
+      icon: bus,
       title: "Sustainable Mobility",
       message: "Eco-friendly transportation",
     },
     {
-      icon: "/src/assets/pedestrians.png",
+      icon: pedestrians,
       title: "Pedestrian infrastructure",
       message: "Walkable streets and crossings",
     },
     {
-      icon: "/src/assets/bicycle.png",
+      icon: bicycle,
       title: "Network Expansion",
       message: "Connected shared-use paths",
     },
@@ -30,7 +35,7 @@ export default function Home() {
       <section className="homepage-hero-section">
         <div className="homepage-hero-video">
           <video autoPlay loop muted id="hero-video">
-            <source src="/src/assets/charlotte.mp4" type="video/mp4" />
+            <source src={video} type="video/mp4" />
             <p>Sorry, Your Browser Doesn't Support Embedded Videos</p>
           </video>
         </div>
