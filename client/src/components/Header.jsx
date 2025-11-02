@@ -44,7 +44,7 @@ export default function Header() {
           </Link>
           <button id="signin-button">
             <Link to="/login" className="nav_link" onClick={handleLinkClick}>
-              Sign In
+              Account
             </Link>
           </button>
         </div>

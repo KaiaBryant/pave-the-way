@@ -110,7 +110,7 @@ export default function RegForm() {
         first_name: "",
         last_name: "",
         gender: "",
-        ethnicity: "", // ✅ spelling fixed
+        ethnicity: "",
         email: "",
         phone_number: "",
         zipcode: "",
@@ -127,7 +127,7 @@ export default function RegForm() {
 
         const { first_name, last_name, gender, ethnicity, email, phone_number, zipcode } = formDataObj;
 
-        // === Validation ===
+
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const phoneRegex = /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
         const zipcodeRegex = /^\d{5}(?:[-\s]\d{4})?$/;
