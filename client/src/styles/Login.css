@@ -1,8 +1,17 @@
-/* Login */
+.main-container {
+    min-height: 50vh;
+    margin: auto;
+    justify-items: center;
+    margin-top: 3vh;
+    width: 50%;
+}
 
-/*-------------------- Media Queries --------------------*/
-/* For tablet */
-@media screen and (min-width: 768px) {}
+.text-danger {
+    text-align: center;
+}
 
-/* For large devices */
-@media screen and (min-width: 1024px) {}
+@media screen and (max-width: 768px) {
+    .main-container {
+        width: 80%;
+    }
+}

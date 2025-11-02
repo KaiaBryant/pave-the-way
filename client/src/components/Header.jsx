@@ -1,42 +1,54 @@
-import { Link } from 'react-router-dom';
-import '../styles/Header.css';
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import Logo from "/src/assets/ptw.png";
+import hamburger from "/src/assets/menu.png";
+import "../styles/Header.css";
 
 export default function Header() {
-    return (
-        <header className="header" id="header">
-            <nav className="nav">
-                <Link to="/" className="nav_logo">
-                    PaveTheWay
-                </Link>
+  const [isOpen, setIsOpen] = useState(false);
 
-                <div className="nav_menu" id="nav-menu">
-                    <ul className="nav_list">
-                        <li className="nav_item">
-                            <Link to="/" className="nav_link">
-                                Home
-                            </Link>
-                        </li>
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) setIsOpen(false);
+  };
 
-                        <li className="nav_item dropdown">
-                            <Link to="/survey" className="nav_link">
-                                Survey
-                            </Link>
-                        </li>
+  return (
+    <header className="nav_header">
+      {/* Hamburger button (mobile only) */}
+      <button
+        className={`open-sidebar ${isOpen ? "hidden" : ""}`}
+        aria-label="open-sidebar"
+        onClick={toggleMenu}
+      >
+        <img className="hamburger" src={hamburger} alt="menu" />
+      </button>
 
-                        <li className="nav_item">
-                            <Link to="/register" className="nav_link">
-                                Register
-                            </Link>
-                        </li>
+      {/* Navigation links */}
+      <nav className={`nav-bar ${isOpen ? "show" : ""}`}>
+        <div className="nav_center mobile_logo_container">
+          <img src={Logo} alt="Pave Train Logo" className="nav_logo" />
+        </div>
 
-                        <li className="nav_item">
-                            <Link to="/login" className="nav_link">
-                                Login
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
-    );
+        <div className="nav_left">
+          <Link to="/" className="nav_link" onClick={handleLinkClick}>
+            Home
+          </Link>
+          <Link to="/survey" className="nav_link" onClick={handleLinkClick}>
+            Survey
+          </Link>
+        </div>
+
+        <div className="nav_right">
+          <Link to="/register" className="nav_link" onClick={handleLinkClick}>
+            Register
+          </Link>
+          <button id="signin-button">
+            <Link to="/login" className="nav_link" onClick={handleLinkClick}>
+              Account
+            </Link>
+          </button>
+        </div>
+      </nav>
+    </header>
+  );
 }

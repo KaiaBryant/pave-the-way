@@ -1,8 +1,277 @@
 /* Home */
+#hero-video {
+  width: 100%;
+  height: auto;
+}
 
-/*-------------------- Media Queries --------------------*/
-/* For tablet */
-@media screen and (min-width: 768px) {}
+.homepage-hero-section {
+  position: relative;
+  text-align: center;
+}
 
-/* For large devices */
-@media screen and (min-width: 1024px) {}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(223, 223, 234, 0.445);
+}
+
+.homepage-hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Segoe UI", sans-serif;
+}
+.homepage-hero-content h1 {
+  font-weight: bolder;
+  font-size: 26px;
+  color: black;
+  margin-bottom: 1.5em;
+}
+#homepage-button {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(to bottom, #1b283f, #4a6691);
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 15px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px black;
+  transition: all 0.3s ease-in-out;
+}
+
+#homepage-button a {
+  color: white;
+}
+
+/* Hover animation */
+#homepage-button:hover {
+  background: linear-gradient(to bottom, #2c4063, #5b88b7);
+  animation: 2s ease-in-out;
+  transform: translateY(-2px);
+}
+
+/* Click animation */
+#homepage-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 10px black;
+}
+
+/* Cards Container */
+.cards--container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.card__image--container {
+  background-color: rgb(239, 241, 244);
+  text-align: center;
+  border-radius: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  height: auto;
+  padding: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 1em;
+}
+
+.cards-image {
+  width: 80px;
+  height: 80px;
+  background-color: #5b88b7;
+  border-radius: 50%;
+  padding: 10px;
+  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card__paragraph--container {
+  text-align: left;
+}
+
+.card-title {
+  font-size: 1.2rem;
+}
+
+.card-message {
+  font-size: 0.9rem;
+}
+
+/* Bottom context */
+.homepage-content--section {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 20px;
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.homepage-title {
+  color: rgb(24, 23, 23);
+  font-size: 20px;
+}
+
+.homepage-paragraph {
+  color: #1b283f;
+  font-size: 16px;
+}
+
+/*-------------------- Tablet Media Queries --------------------*/
+@media screen and (min-width: 768px) {
+  .homepage-hero-content h1 {
+    font-size: 40px;
+  }
+
+  #homepage-button {
+    font-size: 20px;
+    padding: 20px 25px;
+  }
+
+  /* Cards Container */
+  .cards--container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: -80px;
+    z-index: 10;
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 20px;
+  }
+
+  .card__image--container {
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Bottom context */
+  .homepage-content--section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4em;
+    margin-top: -50px;
+    margin-bottom: 1em;
+  }
+
+  .homepage-title {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .homepage-paragraph {
+    font-size: 18px;
+    text-align: center;
+  }
+}
+
+/*-------------------- Desktop Media Queries --------------------*/
+@media screen and (min-width: 1024px) {
+  .homepage-hero-content h1 {
+    font-size: 50px;
+  }
+  #homepage-button {
+    font-size: 30px;
+    padding: 25px 30px;
+  }
+
+  /* Cards Container */
+  .cards--container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 60px;
+    top: -100px;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 20px;
+  }
+
+  .card__image--wrapper {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card__image--container {
+    display: grid;
+    width: 100%;
+    height: auto;
+    padding: 1.5em;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 1em;
+    font-size: 24px;
+  }
+
+  /* Bottom context */
+  .homepage-content--section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4em;
+    margin-top: -60px;
+    margin-bottom: 1em;
+  }
+
+  .homepage-title {
+    font-size: 24px;
+  }
+
+  .homepage-paragraph {
+    font-size: 20px;
+  }
+}
+
+/*-------------------- Large Desktop Media Queries --------------------*/
+@media screen and (min-width: 1440px) {
+  /* Cards Container */
+  .cards--container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 60px;
+    top: -200px;
+    max-width: 1220px;
+    margin: 0 auto;
+    font-size: 24px;
+  }
+
+  .card__image--container {
+    display: grid;
+    width: 100%;
+    height: auto;
+    padding: 1.5em;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 1em;
+    font-size: 28px;
+  }
+
+  /* Bottom context */
+  .homepage-content--section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4em;
+    margin-top: -120px;
+    margin-bottom: 1em;
+  }
+}

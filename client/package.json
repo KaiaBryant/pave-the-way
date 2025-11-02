@@ -10,8 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "@mapbox/polyline": "^1.2.1",
+    "bootstrap": "^5.3.8",
+    "mapbox-gl": "^3.16.0",
+    "mdb-ui-kit": "^9.2.0",
+    "react": "^19.2.0",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.4"
   },
   "devDependencies": {
