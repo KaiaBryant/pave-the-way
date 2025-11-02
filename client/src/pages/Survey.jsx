@@ -4,15 +4,14 @@ import { useState, useEffect } from 'react';
 import '../styles/Survey.css';
 
 export default function Survey() {
-
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:3000/api/me", {
-            credentials: "include",
+        fetch('http://localhost:3000/api/me', {
+            credentials: 'include',
         })
-            .then(res => res.json())
-            .then(data => {
+            .then((res) => res.json())
+            .then((data) => {
                 if (data.loggedIn) {
                     setUser(data.user);
                 }
@@ -20,11 +19,11 @@ export default function Survey() {
     }, []);
 
     // State for dropdown selections
-    const [transport, setTransport] = useState("");
-    const [time, setTime] = useState("");
-    const [day, setDay] = useState("");
-    const [toAddress, setToAddress] = useState("");
-    const [fromAddress, setFromAddress] = useState("");
+    const [transport, setTransport] = useState('');
+    const [time, setTime] = useState('');
+    const [day, setDay] = useState('');
+    const [toAddress, setToAddress] = useState('');
+    const [fromAddress, setFromAddress] = useState('');
 
     // Handle individual dropdowns
     const handleTransportClick = (e) => setTransport(e.target.value);
@@ -39,21 +38,20 @@ export default function Survey() {
         const addressRegex =
             /^(\d{1,}) [a-zA-Z0-9\s]+(\,)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}$/;
         if (!transport || !time || !day || !toAddress || !fromAddress) {
-            alert("Please fill in all fields before submitting");
+            alert('Please fill in all fields before submitting');
         }
         if (!addressRegex.test(toAddress) || !addressRegex.test(fromAddress)) {
-            alert("Must insert a valid address");
+            alert('Must insert a valid address');
             return;
         } else if (
-            transport === "select" ||
-            time === "select" ||
-            day === "select" ||
-            toAddress === "select" ||
-            fromAddress === "select"
+            transport === 'select' ||
+            time === 'select' ||
+            day === 'select' ||
+            toAddress === 'select' ||
+            fromAddress === 'select'
         ) {
             console.log('Error: Please make valid selections for all fields');
         } else {
-
             const generatedRes = await postInput(
                 fromAddress,
                 toAddress,
@@ -66,22 +64,22 @@ export default function Survey() {
                 generatedRes
             );
             navigate('/result', {
-                state: { fromAddress, toAddress, transport, time, day },
+                state: { generatedRes },
             });
         }
     };
 
-    const postInput = async (fromZip, toZip, transport, time, day) => {
+    const postInput = async (fromAddress, toAddress, transport, time, day) => {
         try {
             const res = await fetch('/api/input', {
                 method: 'POST',
-                credentials: "include",   // Allow cookies to be stored
+                credentials: 'include', // Allow cookies to be stored
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    originZipcode: fromZip,
-                    destinationZipcode: toZip,
+                    originAddress: fromAddress,
+                    destinationAddress: toAddress,
                     transportationMethod: transport,
                     time,
                     day,
@@ -105,7 +103,10 @@ export default function Survey() {
                     </h2>
                 ) : (
                     <h2 className="text-xl font-semibold mb-2">
-                        Welcome, Guest! <a href="/register" className="text-blue-600 underline">Sign in here</a>
+                        Welcome, Guest!{' '}
+                        <a href="/register" className="text-blue-600 underline">
+                            Sign in here
+                        </a>
                     </h2>
                 )}
             </div>
