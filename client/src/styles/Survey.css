@@ -1,30 +1,73 @@
-/* Survey */
-.survey-form-section {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  border-radius: 4px;
+.form-container {
+  width: 70%;
+  margin: auto;
+  margin-top: 10vh;
+  transition: all 0.3s ease-in-out;
 }
 
-.survey-form-section label {
-  color: black;
-  font-weight: bold;
-  padding: 20px;
+/* Input and select styling */
+.input-field,
+.f-select {
+  width: 100%;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  color: #333;
 }
 
-#transport-form,
-#time-form,
-#day-form,
-#to-zip,
-#from-zip {
-  color: rgb(212, 23, 23);
-  margin-bottom: 10px;
-}
-/*-------------------- Media Queries --------------------*/
-/* For tablet */
-@media screen and (min-width: 768px) {
+.f-select {
+  cursor: pointer;
+  color: rgb(110, 110, 110);
+  margin-top: 0;
+  padding: 0.5rem;
 }
 
-/* For large devices */
-@media screen and (min-width: 1024px) {
+label {
+  display: block;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+/* Give inputs consistent spacing below */
+.input-field {
+  margin-top: 0.4rem;
+}
+
+/* ---------- TABLET VIEW ---------- */
+@media screen and (max-width: 1024px) {
+  .form-container {
+    width: 75%;
+  }
+
+  .btn-lg {
+    width: 50%;
+  }
+}
+
+/* ---------- MOBILE VIEW ---------- */
+@media screen and (max-width: 768px) {
+  .form-container {
+    width: 85%;
+    margin-top: 8vh;
+  }
+
+  form {
+    padding: 1.5rem;
+  }
+
+  label {
+    font-size: 0.95rem;
+  }
+
+  .input-field,
+  .f-select {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .btn-lg {
+    width: 70%;
+    font-size: 0.9rem;
+  }
 }

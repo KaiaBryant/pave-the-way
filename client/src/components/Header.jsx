@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Logo from "/src/assets/ptw.png";
-import hamburger from "/src/assets/hamburger.svg";
+import hamburger from "/src/assets/menu.png";
 import "../styles/Header.css";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const handleLinkClick = () => {
@@ -39,34 +38,15 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Account dropdown */}
-        <div
-          className="nav_account"
-          onMouseEnter={() => setAccountOpen(true)}
-          onMouseLeave={() => setAccountOpen(false)}
-        >
-          <button
-            className="nav_link account_button"
-            onClick={() => setAccountOpen(!accountOpen)}
-          >
-            Account
+        <div className="nav_right">
+          <Link to="/register" className="nav_link" onClick={handleLinkClick}>
+            Register
+          </Link>
+          <button id="signin-button">
+            <Link to="/login" className="nav_link" onClick={handleLinkClick}>
+              Sign In
+            </Link>
           </button>
-
-          {/* Desktop hover OR mobile toggle */}
-          {accountOpen && (
-            <ul className="dropdown_menu">
-              <li>
-                <Link to="/register" onClick={handleLinkClick}>
-                  Register
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" onClick={handleLinkClick}>
-                  Log In
-                </Link>
-              </li>
-            </ul>
-          )}
         </div>
       </nav>
     </header>

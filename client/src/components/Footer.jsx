@@ -15,19 +15,19 @@ export default function Footer() {
             <a href="https://www.facebook.com" className="me-4 text-reset">
               <i className="fab fa-facebook-f"></i>
             </a>
-            <a href="#" className="me-4 text-reset">
+            <a href="https://x.com/" className="me-4 text-reset">
               <i className="fab fa-twitter"></i>
             </a>
-            <a href="#" className="me-4 text-reset">
+            <a href="https://www.google.com/" className="me-4 text-reset">
               <i className="fab fa-google"></i>
             </a>
-            <a href="#" className="me-4 text-reset">
+            <a href="https://www.instagram.com/" className="me-4 text-reset">
               <i className="fab fa-instagram"></i>
             </a>
-            <a href="#" className="me-4 text-reset">
+            <a href="https://www.linkedin.com/" className="me-4 text-reset">
               <i className="fab fa-linkedin"></i>
             </a>
-            <a href="#" className="me-4 text-reset">
+            <a href="https://github.com/" className="me-4 text-reset">
               <i className="fab fa-github"></i>
             </a>
           </div>
