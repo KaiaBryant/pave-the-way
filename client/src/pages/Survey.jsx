@@ -1,7 +1,7 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import '../styles/Survey.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import "../styles/Survey.css";
 
 export default function Survey() {
   // State for dropdown selections
@@ -35,9 +35,8 @@ export default function Survey() {
       toAddress === "select" ||
       fromAddress === "select"
     ) {
-      console.log('Error: Please make valid selections for all fields');
+      console.log("Error: Please make valid selections for all fields");
     } else {
-
       const generatedRes = await postInput(
         fromAddress,
         toAddress,
@@ -46,10 +45,10 @@ export default function Survey() {
         day
       );
       console.log(
-        'Posted inputs => Returned generated response:',
+        "Posted inputs => Returned generated response:",
         generatedRes
       );
-      navigate('/result', {
+      navigate("/result", {
         state: { fromAddress, toAddress, transport, time, day },
       });
     }
@@ -57,10 +56,10 @@ export default function Survey() {
 
   const postInput = async (fromZip, toZip, transport, time, day) => {
     try {
-      const res = await fetch('/api/input', {
-        method: 'POST',
+      const res = await fetch("/api/input", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           originZipcode: fromZip,
@@ -70,24 +69,29 @@ export default function Survey() {
           day,
         }),
       });
-      if (!res.ok) throw new Error('HTTP Request Status Error:', res.status);
+      if (!res.ok) throw new Error("HTTP Request Status Error:", res.status);
       const data = res.json();
-      console.log('AI generated response:', data);
+      console.log("AI generated response:", data);
       return data;
     } catch (err) {
-      console.log('Error POST request to /api/input:', err);
+      console.log("Error POST request to /api/input:", err);
     }
   };
 
   return (
     <div>
-      <section className="survey-form-section">
-        <form onSubmit={handleSubmit}>
+      <section className="form-container min-h-screen flex items-center justify-center bg-gray-50">
+        <form
+          onSubmit={handleSubmit}
+          className=" bg-white p-8 rounded-2xl shadow-md w-full max-w-md"
+        >
+          <h2 className="text-2xl font-semibold mb-6 text-center">Survey</h2>
+
           <label htmlFor="transport-form">Transportation:</label>
           <select
             id="transport-form"
             name="transport"
-            className="survey-form__select"
+            className="f-select input-field border rounded-lg p-2 w-full mt-4"
             value={transport}
             onChange={handleTransportClick}
           >
@@ -98,12 +102,11 @@ export default function Survey() {
             <option value="walk">Walk</option>
             <option value="rail">Rail</option>
           </select>
-
           <label htmlFor="time-form">Time of Day:</label>
           <select
             id="time-form"
             name="time"
-            className="survey-form__select"
+            className="f-select input-field border rounded-lg p-2 w-full mt-4"
             value={time}
             onChange={handleTimeClick}
           >
@@ -133,15 +136,13 @@ export default function Survey() {
             <option value="10PM">10 PM</option>
             <option value="11PM">11 PM</option>
           </select>
-          <br />
-
           <label htmlFor="day-form">Week of Day:</label>
           <select
             id="day-form"
             name="day"
-            className="survey-form__select"
             value={day}
             onChange={handleDayClick}
+            className="f-select input-field border rounded-lg p-2 w-full mt-4"
           >
             <option value="select">Please select the day of the week</option>
             <option value="sunday">Sunday</option>
@@ -152,8 +153,6 @@ export default function Survey() {
             <option value="friday">Friday</option>
             <option value="saturday">Saturday</option>
           </select>
-          <br />
-
           <label htmlFor="to-adress-form">To Address:</label>
           <input
             type="text"
@@ -161,21 +160,25 @@ export default function Survey() {
             placeholder="To"
             value={toAddress}
             onChange={(e) => setToAddress(e.target.value)}
+            className="f-select input-field border rounded-lg p-2 w-full mt-1"
           />
-
           <label htmlFor="from-address-form">From Address:</label>
           <input
             type="text"
             id="from-adress"
             placeholder="From"
             value={fromAddress}
-            // pattern="[\w',-\\/.\s]"
             onChange={(e) => setFromAddress(e.target.value)}
+            className="f-select input-field border rounded-lg p-2 w-full mt-1"
           />
-
-          <button type="submit" className="survey-form__button">
-            Submit
-          </button>
+          <div className="d-flex justify-content-center">
+            <button
+              type="submit"
+              className="btn btn-lg btn-dark btn-primary transition"
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </section>
     </div>
