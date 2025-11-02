@@ -1,0 +1,180 @@
+.results {
+    font-size: 50px;
+    display: block;
+    width: fit-content;
+    margin: auto;
+    margin-top: 50px;
+    margin-bottom: 80px;
+}
+
+.map-container {
+    width: 100vw;
+    max-width: 2000px;
+    height: fit-content;
+    justify-content: space-between;
+    text-align: center;
+    display: flex;
+    padding: 30px;
+    margin-bottom: 100px;
+}
+
+.map1,
+.map2 {
+    width: 48%;
+    height: 600px;
+    margin: auto;
+}
+
+.directions {
+    padding: 40px;
+}
+
+.impact-container {
+    width: 100%;
+    display: flex;
+}
+
+.metrics-container {
+    width: 50%;
+    padding: 30px;
+}
+
+.metrics-container h3 {
+    font-size: 30px;
+}
+
+.metrics-container li {
+    font-size: 24px
+}
+
+.metrics-description {
+    width: 50%;
+    padding: 30px;
+    font-size: 24px;
+    line-height: 40px;
+}
+
+.carousel {
+    width: 100%;
+    height: 600px;
+    margin: auto;
+    background-color: #173042;
+    color: white;
+}
+
+.carousel-content {
+    display: block;
+    margin: auto;
+    padding-left: 90px;
+    padding-right: 90px;
+    padding-top: 140px;
+}
+
+.carousel-content ul {
+    margin-top: 80px;
+}
+
+
+
+.custom-prev,
+.custom-next {
+    font-size: 80px;
+}
+
+@media screen and (max-width: 1000px) {
+    .map-container {
+        flex-direction: column;
+        gap: 80px;
+    }
+
+    .map1,
+    .map2 {
+        width: 80%;
+    }
+
+    .impact-container {
+        flex-direction: column;
+    }
+
+    .metrics-description {
+        width: 100%;
+
+    }
+
+    .metrics-container {
+        width: 100%;
+    }
+
+
+
+}
+
+@media screen and (max-width: 767px) {
+    .results {
+        font-size: 10vw;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .directions {
+        padding: 0;
+        padding-left: 20px;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .impact-container {
+        padding: 20px;
+    }
+
+    .metrics-description {
+        padding: 0;
+        font-size: 16px;
+        line-height: 24px;
+
+    }
+
+    .metrics-container {
+        padding: 0;
+    }
+
+    .carousel {
+        padding: 0;
+        height: 400px;
+    }
+
+    .carousel h3 {
+        font-size: 16px;
+    }
+
+    .carousel li,
+    .carousel p {
+        font-size: 14px;
+    }
+
+
+    .carousel-content {
+        display: block;
+        margin: auto;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-top: 120px;
+    }
+
+    .carousel-content ul {
+        margin-top: 20px;
+    }
+
+
+
+    .custom-prev,
+    .custom-next {
+        font-size: 30px;
+    }
+
+    .map1,
+    .map2 {
+        width: 100%;
+        height: 400px;
+    }
+}

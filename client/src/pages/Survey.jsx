@@ -100,7 +100,7 @@ export default function Survey() {
 
   const postInput = async (fromAddress, toAddress, transport, time, day) => {
     try {
-      const res = await fetch('/api/input', {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/input`, {
         method: 'POST',
         credentials: 'include',
         headers: {
