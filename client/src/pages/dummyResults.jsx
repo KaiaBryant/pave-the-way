@@ -18,7 +18,43 @@ export default function Dummy() {
     console.log('Compared metrics sent from Mapbox to parent page:', data);
   };
 
+  useEffect(() => {
+    async function saveSurvey() {
+      if (!comparedMetrics || !survey?.generatedRes) return;
 
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user?.email) {
+        console.warn("User not logged in — skipping survey save");
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:3000/api/survey/results", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            email: user.email,
+            hypothetical: comparedMetrics.hypothetical,
+            existing: comparedMetrics.existing,
+            improvements: comparedMetrics.improvements,
+            additional_info: survey.generatedRes.text_direction || ""
+          }),
+        });
+
+        const result = await res.json();
+        console.log("Survey saved:", result);
+      } catch (err) {
+        console.error("Error saving survey", err);
+      }
+    }
+
+    saveSurvey();
+  }, [comparedMetrics]);
+
+  if (!survey || !survey.generatedRes) {
+    return <p>No survey data found — please submit again.</p>;
+  }
 
   return (
     <main>

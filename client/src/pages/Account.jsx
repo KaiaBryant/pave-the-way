@@ -148,35 +148,31 @@ export default function Account() {
                 </form>
             )}
 
-            {/* <h3>My Surveys</h3>
             {data.surveys.length === 0 ? (
                 <p>No surveys submitted yet.</p>
             ) : (
                 <table className="survey-table">
                     <thead>
                         <tr>
-                            <th>From Zip</th>
-                            <th>To Zip</th>
-                            <th>Transport</th>
-                            <th>Time</th>
-                            <th>Day</th>
                             <th>Date</th>
+                            <th>Hypothetical</th>
+                            <th>Existing</th>
+                            <th>Improvements</th>
                         </tr>
                     </thead>
                     <tbody>
                         {data.surveys.map((s, i) => (
                             <tr key={i}>
-                                <td>{s.originZipcode}</td>
-                                <td>{s.destinationZipcode}</td>
-                                <td>{s.transportationMethod}</td>
-                                <td>{s.time}</td>
-                                <td>{s.day}</td>
                                 <td>{new Date(s.created_at).toLocaleString()}</td>
+                                <td>{JSON.stringify(s.hypothetical)}</td>
+                                <td>{JSON.stringify(s.existing)}</td>
+                                <td>{JSON.stringify(s.improvements)}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            )} */}
+            )}
+
         </div>
     );
 }
