@@ -65,34 +65,56 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/input', async (req, res) => {
-  try {
-    const {
-      originAddress,
-      destinationAddress,
-      transportationMethod,
-      time,
-      day,
-    } = req.body;
+     try {
+        const {
+            originAddress,
+            destinationAddress,
+            transportationMethod,
+            time,
+            day,
+        } = req.body;
 
-    try {
-      const generatedRes = await generateRoute(
-        originAddress,
-        destinationAddress,
-        transportationMethod,
-        time,
-        day
-      );
+        try {
+            const generatedRes = await generateRoute(
+                originAddress,
+                destinationAddress,
+                transportationMethod,
+                time,
+                day
+            );
 
-      console.log('Generated route response:', generatedRes);
-      res.json(generatedRes);
+            console.log('Generated route response:', generatedRes);
+            res.json(generatedRes);
+        } catch (err) {
+            console.log('Error fetching generated route from Perplexity:' + err);
+            res.json({ error: 'Error fetching generated route from Perplexity' });
+        }
     } catch (err) {
-      console.log('Error fetching generated route from Perplexity:' + err);
-      res.json({ error: 'Error fetching generated route from Perplexity' });
+        console.log(`Error fetching AI-generated response: ${err}`);
     }
-  } catch (err) {
-    console.log(`Error fetching AI-generated response: ${err}`);
-  }
 });
+
+
+// ================== SURVEY RESULTS ==================
+app.post('/api/survey/results', async (req, res) => {
+    const { email, hypothetical, existing, improvements, additional_info } = req.body;
+
+    if (!email) return res.status(400).json({ error: "Missing email" });
+
+    await db.query(
+        "INSERT INTO survey_results (email, hypothetical, existing, improvements, additional_info) VALUES (?,?,?,?,?)",
+        [
+            email,
+            JSON.stringify(hypothetical),
+            JSON.stringify(existing),
+            JSON.stringify(improvements),
+            additional_info
+        ]
+    );
+
+    res.json({ success: true });
+});
+
 
 // ================== CONTACT FORM ==================
 
