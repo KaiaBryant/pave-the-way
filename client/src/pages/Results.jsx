@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { Carousel } from 'react-bootstrap';
 import pic from '../assets/ptw.png';
 
-export default function Results() {
+export default function Results({ isLoggedIn }) {
   const surveyLocation = useLocation();
   const survey = surveyLocation.state;
 
@@ -23,14 +23,14 @@ export default function Results() {
       if (!comparedMetrics || !survey?.generatedRes) return;
 
       const user = JSON.parse(localStorage.getItem('user'));
-      if (!user?.email) {
+      if (!user?.email || !isLoggedIn) {
         console.warn('User not logged in — skipping survey save');
         return;
       }
 
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}api/survey/results`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/survey/results`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

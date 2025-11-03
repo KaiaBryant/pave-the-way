@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Account.css';
 
-export default function Account() {
+export default function Account({ isLoggedIn }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(false);
@@ -20,7 +20,7 @@ export default function Account() {
         );
 
         const result = await res.json();
-        if (!result.loggedIn) {
+        if (!result.loggedIn || !isLoggedIn) {
           navigate('/login');
           return;
         }

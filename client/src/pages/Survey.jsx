@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import '../styles/Survey.css';
 
-export default function Survey() {
+export default function Survey({ isLoggedIn }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function Survey() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.loggedIn) {
+        if (data.loggedIn || isLoggedIn) {
           setUser(data.user);
         }
       });
