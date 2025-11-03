@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import Logo from "/src/assets/ptw.png";
-import hamburger from "/src/assets/menu.png";
-import "../styles/Header.css";
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import Logo from '/src/assets/ptw.png';
+import hamburger from '/src/assets/menu.png';
+import '../styles/Header.css';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,11 +12,32 @@ export default function Header() {
     if (window.innerWidth <= 768) setIsOpen(false);
   };
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    async function fetchAccount() {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/account`,
+          {
+            credentials: 'include',
+          }
+        );
+
+        const result = await res.json();
+        if (result.loggedIn) setIsLoggedIn(true);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+
+    fetchAccount();
+  }, []);
+
   return (
     <header className="nav_header">
       {/* Hamburger button (mobile only) */}
       <button
-        className={`open-sidebar ${isOpen ? "hidden" : ""}`}
+        className={`open-sidebar ${isOpen ? 'hidden' : ''}`}
         aria-label="open-sidebar"
         onClick={toggleMenu}
       >
@@ -24,7 +45,7 @@ export default function Header() {
       </button>
 
       {/* Navigation links */}
-      <nav className={`nav-bar ${isOpen ? "show" : ""}`}>
+      <nav className={`nav-bar ${isOpen ? 'show' : ''}`}>
         <div className="nav_center mobile_logo_container">
           <img src={Logo} alt="Pave Train Logo" className="nav_logo" />
         </div>
@@ -43,7 +64,11 @@ export default function Header() {
             Register
           </Link>
           <button id="signin-button">
-            <Link to="/login" className="nav_link" onClick={handleLinkClick}>
+            <Link
+              to={isLoggedIn ? '/account' : '/login'}
+              className="nav_link"
+              onClick={handleLinkClick}
+            >
               Account
             </Link>
           </button>
