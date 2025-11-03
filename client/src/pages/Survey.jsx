@@ -195,7 +195,7 @@ export default function Survey({ isLoggedIn }) {
             <option value="10PM">10 PM</option>
             <option value="11PM">11 PM</option>
           </select>
-          <label htmlFor="day-form">Week of Day:</label>
+          <label htmlFor="day-form">Day of the Week:</label>
           <select
             id="day-form"
             name="day"
