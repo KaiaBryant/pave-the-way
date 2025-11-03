@@ -174,36 +174,22 @@ export default function Account() {
                     <h1 className="survey-header">Your Surveys</h1>
                     {data.surveys.map((s, i) => (
                         <div className="survey-container">
-                            <h3>Survey #{i + 1}</h3>
+                            <h3>Survey #{data.surveys.length - i}</h3>
                             <div>
-                                <strong>Existing:</strong>
-                                {JSON.parse(JSON.stringify(s.existing)).replace(
+                                <strong>Created At: </strong>
+                                {JSON.parse(JSON.stringify(s.created_at)).replace(
                                     /[@!#$"'/{},_]/g,
                                     ' '
-                                )}
+                                ).substring(0, 10)}
                             </div>
                             <div>
-                                <strong>Hypothetical:</strong>
+                                <strong>Metrics:</strong>
                                 {JSON.parse(JSON.stringify(s.hypothetical)).replace(
-                                    /[@!#$"'/{},_]/g,
+                                    /[@!#$"'/{}_]/g,
                                     ' '
-                                )}
-                            </div>
-                            <div>
-                                <strong>Improvements:</strong>
-                                {JSON.parse(JSON.stringify(s.improvements)).replace(
-                                    /[@!#$"'/{},_]/g,
-                                    ' '
-                                )}
+                                ).replace(/[:]/g, '- ')}
                             </div>
                         </div>
-                        // <tr key={i}>
-                        //     <td className="column-1">{new Date(s.created_at).toLocaleString()}</td>
-                        //     <td className="column-2">{JSON.parse(JSON.stringify(s.hypothetical)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
-                        //     <td className="column-3">{JSON.parse(JSON.stringify(s.hypothetical)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
-                        //     <td className="column-4">{JSON.parse(JSON.stringify(s.improvements)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
-                        //     <td>{JSON.stringify(s.hypothetical.duration_min)}</td>
-                        // </tr>
                     ))}
                 </div>
             )}
