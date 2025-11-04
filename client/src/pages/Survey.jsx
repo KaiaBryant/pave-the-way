@@ -48,7 +48,7 @@ export default function Survey({ user, userData }) {
     console.log('Posted inputs => Returned generated response:', generatedRes);
 
     //  If user is logged in → save their survey results to DB
-    if (user && userData.user.email) {
+    if (user && userData?.user.email) {
       try {
         await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/survey/results`, {
           method: 'POST',
@@ -114,7 +114,7 @@ export default function Survey({ user, userData }) {
       <div className="p-4">
         {user ? (
           <h2 className="text-xl font-semibold mb-2">
-            Welcome, {userData.user.first_name}!
+            Welcome, {userData?.user.first_name}!
           </h2>
         ) : (
           <h2 className="text-xl font-semibold mb-2">
