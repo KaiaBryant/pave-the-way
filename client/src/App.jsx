@@ -11,21 +11,29 @@ import Register from './pages/Register';
 import Account from './pages/Account';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(false);
+  const [userData, setUserData] = useState(null);
   useEffect(() => {
     async function fetchAccount() {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/account`,
-          {
-            credentials: 'include',
-          }
-        );
-
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/me`, {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error(`Failed to fetch: ${res}`);
         const result = await res.json();
-        if (result.loggedIn) setIsLoggedIn(true);
+        console.log('Checking active session i.e., user logged in:', result);
+        if (result.loggedIn) {
+          setUser(true);
+          const accountRes = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/account`,
+            { credentials: 'include' }
+          );
+          const accountData = await accountRes.json();
+          console.log('User data fetched:', accountData);
+          setUserData(accountData);
+        }
       } catch (err) {
-        setError(err.message);
+        console.log('Failed to fetch account validation:', err);
       }
     }
 
@@ -34,19 +42,30 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Header isLoggedIn={isLoggedIn} />
+      <Header user={user || false} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/survey" element={<Survey />} isLoggedIn={isLoggedIn} />
-        <Route path="/contact" element={<Contact />} />
         <Route
-          path="/register"
-          element={<Register />}
-          isLoggedIn={isLoggedIn}
+          path="/survey"
+          element={<Survey user={user || false} userData={userData} />}
         />
-        <Route path="/login" element={<Login />} isLoggedIn={isLoggedIn} />
-        <Route path="/result" element={<Result />} isLoggedIn={isLoggedIn} />
-        <Route path="/account" element={<Account />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/login"
+          element={<Login user={user || false} setUser={setUser} />}
+        />
+        <Route path="/result" element={<Result />} />
+        <Route
+          path="/account"
+          element={
+            <Account
+              user={user || false}
+              setUser={setUser}
+              userData={userData}
+            />
+          }
+        />
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -4,7 +4,7 @@ import Logo from '/src/assets/ptw.png';
 import hamburger from '/src/assets/menu.png';
 import '../styles/Header.css';
 
-export default function Header({ isLoggedIn }) {
+export default function Header({ user }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -44,9 +44,12 @@ export default function Header({ isLoggedIn }) {
           </Link>
           <button id="signin-button">
             <Link
-              to={isLoggedIn ? '/account' : '/login'}
+              to={user ? '/account' : '/login'}
               className="nav_link"
-              onClick={handleLinkClick}
+              onClick={() => {
+                console.log('User state:', user); // Check if this is still showing true
+                handleLinkClick();
+              }}
             >
               Account
             </Link>

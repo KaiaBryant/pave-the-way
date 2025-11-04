@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
-export default function Login() {
+export default function Login({ user, setUser }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -27,11 +27,14 @@ export default function Login() {
       });
 
       const data = await res.json();
+      console.log('User logged in:', data);
       if (!res.ok) throw new Error(data.error || 'Login failed');
       // Saves the user from server response
       if (data.user) {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
+
+      setUser(true);
       // Redirect to account
       navigate('/account');
     } catch (err) {
