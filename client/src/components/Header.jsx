@@ -4,34 +4,13 @@ import Logo from '/src/assets/ptw.png';
 import hamburger from '/src/assets/menu.png';
 import '../styles/Header.css';
 
-export default function Header() {
+export default function Header({ user }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const handleLinkClick = () => {
     if (window.innerWidth <= 768) setIsOpen(false);
   };
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    async function fetchAccount() {
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/account`,
-          {
-            credentials: 'include',
-          }
-        );
-
-        const result = await res.json();
-        if (result.loggedIn) setIsLoggedIn(true);
-      } catch (err) {
-        setError(err.message);
-      }
-    }
-
-    fetchAccount();
-  }, []);
 
   return (
     <header className="nav_header">
@@ -65,9 +44,12 @@ export default function Header() {
           </Link>
           <button id="signin-button">
             <Link
-              to={isLoggedIn ? '/account' : '/login'}
+              to={user ? '/account' : '/login'}
               className="nav_link"
-              onClick={handleLinkClick}
+              onClick={() => {
+                console.log('User state:', user); // Check if this is still showing true
+                handleLinkClick();
+              }}
             >
               Account
             </Link>

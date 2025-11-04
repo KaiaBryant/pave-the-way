@@ -30,7 +30,7 @@ export default function Results() {
 
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}api/survey/results`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/survey/results`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
