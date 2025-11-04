@@ -408,9 +408,9 @@ function renderRoute(map, geojson) {
 async function geocode(location) {
   try {
     const res = await fetch(
-      `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
-        location
-      )}&access_token=${import.meta.env.VITE_MAPBOX_API_KEY}`
+      `https://api.mapbox.com/search/geocode/v6/forward?q=${location}&access_token=${
+        import.meta.env.VITE_MAPBOX_API_KEY
+      }`
     );
     if (!res.ok)
       throw new Error('MapBox Geocode HTTP Request Error', res.status);
@@ -425,9 +425,7 @@ async function geocode(location) {
 async function getDirectionRoute(profile, coordinates) {
   try {
     const res = await fetch(
-      `https://api.mapbox.com/directions/v5/${encodeURIComponent(
-        profile
-      )}/${encodeURIComponent(coordinates)}.json?access_token=${
+      `https://api.mapbox.com/directions/v5/${profile}/${coordinates}.json?access_token=${
         import.meta.env.VITE_MAPBOX_API_KEY
       }`
     );
