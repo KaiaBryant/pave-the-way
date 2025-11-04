@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Account.css';
 
-export default function Account() {
+export default function Account({ user, setUser, userData }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(false);
@@ -38,17 +38,19 @@ export default function Account() {
   if (error) return <p className="error">{error}</p>;
   if (!data) return <p>Loading...</p>;
 
-  const { user } = data;
   //  Save updated profile
   async function handleSave(e) {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:3000/api/account', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/account`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(form),
+        }
+      );
 
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Failed to update');
@@ -65,20 +67,24 @@ export default function Account() {
 
   //  Logout
   const handleLogout = async () => {
-    await fetch('http://localhost:3000/api/logout', {
-      method: 'POST',
-      credentials: 'include',
-    });
-
-    localStorage.removeItem('user');
-    navigate('/');
+    try {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      localStorage.removeItem('user');
+      setUser(false);
+      navigate('/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
   };
 
   //  Delete account
   const handleDelete = async () => {
     if (!window.confirm('Are you sure? This cannot be undone.')) return;
 
-    await fetch('http://localhost:3000/api/account', {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/account`, {
       method: 'DELETE',
       credentials: 'include',
     });
@@ -95,16 +101,17 @@ export default function Account() {
         <>
           <div className="account-info">
             <p>
-              <strong>Name:</strong> {user.first_name} {user.last_name}
+              <strong>Name:</strong> {data.user.first_name}{' '}
+              {data.user.last_name}
             </p>
             <p>
-              <strong>Email:</strong> {user.email}
+              <strong>Email:</strong> {data.user.email}
             </p>
             <p>
-              <strong>Phone:</strong> {user.phone_number}
+              <strong>Phone:</strong> {data.user.phone_number}
             </p>
             <p>
-              <strong>Zip:</strong> {user.zipcode}
+              <strong>Zip:</strong> {data.user.zipcode}
             </p>
           </div>
 
@@ -174,36 +181,20 @@ export default function Account() {
           <h1 className="survey-header">Your Surveys</h1>
           {data.surveys.map((s, i) => (
             <div className="survey-container">
-              <h3>Survey #{i + 1}</h3>
+              <h3>Survey #{data.surveys.length - i}</h3>
               <div>
-                <strong>Existing:</strong>
-                {JSON.parse(JSON.stringify(s.existing)).replace(
-                  /[@!#$"'/{},_]/g,
-                  ' '
-                )}
+                <strong>Created At: </strong>
+                {JSON.parse(JSON.stringify(s.created_at))
+                  .replace(/[@!#$"'/{},_]/g, ' ')
+                  .substring(0, 10)}
               </div>
               <div>
-                <strong>Hypothetical:</strong>
-                {JSON.parse(JSON.stringify(s.hypothetical)).replace(
-                  /[@!#$"'/{},_]/g,
-                  ' '
-                )}
-              </div>
-              <div>
-                <strong>Improvements:</strong>
-                {JSON.parse(JSON.stringify(s.improvements)).replace(
-                  /[@!#$"'/{},_]/g,
-                  ' '
-                )}
+                <strong>Metrics:</strong>
+                {JSON.parse(JSON.stringify(s.hypothetical))
+                  .replace(/[@!#$"'/{}_]/g, ' ')
+                  .replace(/[:]/g, '- ')}
               </div>
             </div>
-            // <tr key={i}>
-            //     <td className="column-1">{new Date(s.created_at).toLocaleString()}</td>
-            //     <td className="column-2">{JSON.parse(JSON.stringify(s.hypothetical)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
-            //     <td className="column-3">{JSON.parse(JSON.stringify(s.hypothetical)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
-            //     <td className="column-4">{JSON.parse(JSON.stringify(s.improvements)).replace(/[@!#$"'/{},_]/g, ' ')}</td>
-            //     <td>{JSON.stringify(s.hypothetical.duration_min)}</td>
-            // </tr>
           ))}
         </div>
       )}

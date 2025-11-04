@@ -3,21 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import '../styles/Survey.css';
 
-export default function Survey() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/me`, {
-      credentials: 'include',
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.loggedIn) {
-          setUser(data.user);
-        }
-      });
-  }, []);
-
+export default function Survey({ user, userData }) {
   // State for dropdown selections
   const [transport, setTransport] = useState('');
   const [time, setTime] = useState('');
@@ -62,14 +48,14 @@ export default function Survey() {
     console.log('Posted inputs => Returned generated response:', generatedRes);
 
     //  If user is logged in → save their survey results to DB
-    if (user && user.email) {
+    if (user && userData?.user.email) {
       try {
         await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/survey/results`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({
-            email: user.email,
+            email: userData.user.email,
             hypothetical: generatedRes?.metrics || generatedRes || {},
             existing: generatedRes?.currentRoute || null,
             improvements: generatedRes?.improvements || null,
@@ -77,7 +63,7 @@ export default function Survey() {
           }),
         });
 
-        console.log('Survey saved!', user.email);
+        console.log('Survey saved!', userData.user.email);
       } catch (error) {
         console.error('Failed to save survey:', error);
       }
@@ -128,7 +114,7 @@ export default function Survey() {
       <div className="p-4">
         {user ? (
           <h2 className="text-xl font-semibold mb-2">
-            Welcome, {user.first_name}!
+            Welcome, {userData?.user.first_name}!
           </h2>
         ) : (
           <h2 className="text-xl font-semibold mb-2">
@@ -195,7 +181,7 @@ export default function Survey() {
             <option value="10PM">10 PM</option>
             <option value="11PM">11 PM</option>
           </select>
-          <label htmlFor="day-form">Week of Day:</label>
+          <label htmlFor="day-form">Day of the Week:</label>
           <select
             id="day-form"
             name="day"

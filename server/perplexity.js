@@ -3,6 +3,55 @@ import Perplexity from '@perplexity-ai/perplexity_ai';
 
 const client = new Perplexity({ apiKey: process.env.PERPLEXITY_API_KEY });
 
+async function geocodeAddress(address) {
+  const response = await fetch(
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+      address
+    )}.json?` +
+      `proximity=-80.8431,35.2271&` +
+      `bbox=-81.2,34.9,-80.5,35.5&` +
+      `access_token=${process.env.MAPBOX_API_KEY}`
+  );
+
+  const data = await response.json();
+  if (data.features && data.features.length > 0) {
+    return data.features[0].geometry.coordinates;
+  }
+  throw new Error(`Could not geocode address: ${address}`);
+}
+
+async function getExistingRoute(
+  originCoords,
+  destinationCoords,
+  transportationMethod
+) {
+  const profileMap = {
+    driving: 'driving',
+    walking: 'walking',
+    cycling: 'cycling',
+    car: 'driving',
+    bike: 'cycling',
+  };
+
+  const profile = profileMap[transportationMethod.toLowerCase()] || 'driving';
+
+  const response = await fetch(
+    `https://api.mapbox.com/directions/v5/mapbox/${profile}/` +
+      `${originCoords[0]},${originCoords[1]};${destinationCoords[0]},${destinationCoords[1]}?` +
+      `geometries=geojson&overview=full&steps=true&access_token=${process.env.MAPBOX_API_KEY}`
+  );
+
+  const data = await response.json();
+  const route = data.routes[0];
+
+  return {
+    distance: route.distance,
+    duration: route.duration,
+    geometry: route.geometry,
+    summary: route.legs[0]?.summary || 'existing road network',
+  };
+}
+
 export default async function generateRoute(
   originAddress,
   destinationAddress,
@@ -11,6 +60,16 @@ export default async function generateRoute(
   day
 ) {
   try {
+    const originCoords = await geocodeAddress(originAddress);
+    const destinationCoords = await geocodeAddress(destinationAddress);
+
+    const existingRoute = await getExistingRoute(
+      originCoords,
+      destinationCoords,
+      transportationMethod
+    );
+    const existingCoords = existingRoute.geometry.coordinates;
+
     const completion = await client.chat.completions.create({
       model: 'sonar',
       messages: [
@@ -20,13 +79,39 @@ export default async function generateRoute(
         },
         {
           role: 'user',
-          content: `Generate coordinates for a NEW, NON-EXISTENT transportation route in Charlotte, NC from ${originAddress} to ${destinationAddress}. This route should:
-                - Connect the two points via a straight or optimized path that IGNORES existing roads
-                - Consider natural obstacles (rivers, lakes, protected areas)
-                - Suggest new infrastructure (bridges, tunnels, dedicated lanes) where beneficial
-                - Be optimized for ${transportationMethod} during ${time} on ${day}
-                - Include approximately 15 waypoint coordinates that form a logical new path
-            Do NOT follow existing roads - suggest entirely new routes that would require construction.
+          content: `Generate a hypothetical transportation route in Charlotte, NC.
+            CRITICAL REQUIREMENTS:
+            - The route MUST start at exactly: [${originCoords[0]}, ${
+            originCoords[1]
+          }] (${originAddress})
+            - The route MUST end at exactly: [${destinationCoords[0]}, ${
+            destinationCoords[1]
+          }] (${destinationAddress})
+            - Generate approximately 13 intermediate waypoints between these endpoints
+            - The first coordinate in your array must be [${originCoords[0]}, ${
+            originCoords[1]
+          }]
+            - The last coordinate in your array must be [${
+              destinationCoords[0]
+            }, ${destinationCoords[1]}]
+            - Intermediate points should form a logical new infrastructure path optimized for ${transportationMethod}
+            - Consider the time period ${time} on ${day} for traffic optimization
+            EXISTING ROUTE CONTEXT:
+            - Current route distance: ${(existingRoute.distance / 1000).toFixed(
+              2
+            )} km
+            - Current route duration: ${(existingRoute.duration / 60).toFixed(
+              1
+            )} minutes
+            - Current route uses: ${
+              existingRoute.summary || 'existing road network'
+            }
+            Create an optimal hybrid route that:
+            1. LEVERAGES existing infrastructure where it makes sense (roads, bike lanes, bridges, tunnels)
+            2. PROPOSES NEW infrastructure segments only where they provide significant improvement
+            3. IDENTIFIES specific existing roads/routes to utilize (e.g., "use existing N Tryon St from mile 0-2.5")
+            4. SPECIFIES where new construction should BEGIN and END
+            5. MINIMIZES construction costs while maximizing benefits
             Additionally, estimate these metrics for your proposed route:
                 - Expected travel time in optimal conditions
                 - Estimated construction cost (USD)
