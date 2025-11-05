@@ -6,6 +6,7 @@ import bus from "../assets/bus.png"
 import pedestrians from "../assets/pedestrians.png"
 import bicycle from "../assets/bicycle.png"
 import video from "../assets/charlotte.mp4"
+import moveForward from "../assets/MovingForward.png"
 
 export default function Home() {
   const data = [
@@ -41,7 +42,7 @@ export default function Home() {
         </div>
         <div className="overlay"></div>
         <div className="homepage-hero-content">
-          <h1>Moving Forward Together</h1>
+          <img id="moveForward" src={moveForward}></img>
           <button id="homepage-button">
             <Link to="/survey">Start Survey</Link>
           </button>
