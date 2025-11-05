@@ -124,24 +124,37 @@
   font-size: 0.9rem;
 }
 
-/* Bottom context */
 .homepage-content--section {
   display: flex;
   flex-direction: column;
-  text-align: left;
+  width: 95vw;
+  margin: auto;
+  gap: 4em;
+  margin-top: 50px;
+  margin-bottom: 10vh;
+}
+
+#vision {
   padding: 20px;
-  gap: 1em;
-  margin-top: 1em;
+  background-color: rgb(229, 229, 229);
+  font-size: 14px;
+
 }
 
-.homepage-title {
-  color: rgb(24, 23, 23);
-  font-size: 20px;
+#mobility-vision {
+  padding-top: 20px;
+  font-size: 30px;
 }
 
-.homepage-paragraph {
-  color: #1b283f;
-  font-size: 16px;
+#looking-ahead {
+  margin-top: 20px;
+  font-size: 30px;
+}
+
+
+#busRider {
+  display: none;
+  clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
 }
 
 /*-------------------- Tablet Media Queries --------------------*/
@@ -196,21 +209,35 @@
 
   /* Bottom context */
   .homepage-content--section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    margin: auto;
     gap: 4em;
     margin-top: -50px;
-    margin-bottom: 1em;
+    margin-bottom: 10vh;
   }
 
-  .homepage-title {
-    font-size: 22px;
-    text-align: center;
+  #vision {
+    padding: 30px;
+    background-color: rgb(229, 229, 229);
+    font-size: 14px;
+
   }
 
-  .homepage-paragraph {
-    font-size: 18px;
-    text-align: center;
+  #mobility-vision {
+    padding-top: 20px;
+    font-size: 30px;
+  }
+
+  #looking-ahead {
+    margin-top: 20px;
+    font-size: 30px;
+  }
+
+
+  #busRider {
+    display: none;
   }
 }
 
@@ -257,19 +284,40 @@
 
   /* Bottom context */
   .homepage-content--section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
+    width: 95vw;
+    margin: auto;
     gap: 4em;
-    margin-top: -60px;
-    margin-bottom: 1em;
+    margin-top: -50px;
+    margin-bottom: 10vh;
   }
 
-  .homepage-title {
-    font-size: 24px;
+  #vision {
+    padding: 0;
+    padding-right: 30px;
+    background-color: rgb(229, 229, 229);
+    font-size: 14px;
+
   }
 
-  .homepage-paragraph {
-    font-size: 20px;
+  #mobility-vision {
+    padding-top: 20px;
+    font-size: 30px;
+  }
+
+  #looking-ahead {
+    margin-top: 4.8vw;
+    font-size: 30px;
+  }
+
+
+  #busRider {
+    width: 400px;
+    height: auto;
+    float: left;
+    margin-right: 30px;
+    display: block;
   }
 }
 
@@ -312,10 +360,39 @@
 
   /* Bottom context */
   .homepage-content--section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    margin: auto;
     gap: 4em;
     margin-top: -120px;
-    margin-bottom: 1em;
+    margin-bottom: 10vh;
+
   }
+
+  #vision {
+    padding-right: 30px;
+    background-color: rgb(229, 229, 229);
+    font-size: 16px;
+
+  }
+
+  #mobility-vision {
+    padding-top: 20px;
+    font-size: 40px;
+  }
+
+  #looking-ahead {
+    margin-top: 20px;
+    font-size: 40px;
+  }
+
+
+  #busRider {
+    width: 400px;
+    height: auto;
+    float: left;
+    margin-right: 30px;
+  }
+
 }
