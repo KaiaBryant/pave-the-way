@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
-export default function Login({ user, setUser }) {
+export default function Login({ user, setUser, setUserData }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -33,6 +33,12 @@ export default function Login({ user, setUser }) {
       if (data.user) {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
+      const accountRes = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/account`,
+        { credentials: 'include' }
+      );
+      const accountData = await accountRes.json();
+      setUserData(accountData);
 
       setUser(true);
       // Redirect to account

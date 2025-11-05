@@ -53,7 +53,13 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route
           path="/login"
-          element={<Login user={user || false} setUser={setUser} />}
+          element={
+            <Login
+              user={user || false}
+              setUser={setUser}
+              setUserData={setUserData}
+            />
+          }
         />
         <Route path="/result" element={<Result />} />
         <Route

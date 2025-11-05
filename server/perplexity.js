@@ -20,6 +20,38 @@ async function geocodeAddress(address) {
   throw new Error(`Could not geocode address: ${address}`);
 }
 
+async function getExistingRoute(
+  originCoords,
+  destinationCoords,
+  transportationMethod
+) {
+  const profileMap = {
+    driving: 'driving',
+    walking: 'walking',
+    cycling: 'cycling',
+    car: 'driving',
+    bike: 'cycling',
+  };
+
+  const profile = profileMap[transportationMethod.toLowerCase()] || 'driving';
+
+  const response = await fetch(
+    `https://api.mapbox.com/directions/v5/mapbox/${profile}/` +
+      `${originCoords[0]},${originCoords[1]};${destinationCoords[0]},${destinationCoords[1]}?` +
+      `geometries=geojson&overview=full&steps=true&access_token=${process.env.MAPBOX_API_KEY}`
+  );
+
+  const data = await response.json();
+  const route = data.routes[0];
+
+  return {
+    distance: route.distance,
+    duration: route.duration,
+    geometry: route.geometry,
+    summary: route.legs[0]?.summary || 'existing road network',
+  };
+}
+
 export default async function generateRoute(
   originAddress,
   destinationAddress,
@@ -31,6 +63,13 @@ export default async function generateRoute(
     const originCoords = await geocodeAddress(originAddress);
     const destinationCoords = await geocodeAddress(destinationAddress);
 
+    const existingRoute = await getExistingRoute(
+      originCoords,
+      destinationCoords,
+      transportationMethod
+    );
+    const existingCoords = existingRoute.geometry.coordinates;
+
     const completion = await client.chat.completions.create({
       model: 'sonar',
       messages: [
@@ -40,16 +79,39 @@ export default async function generateRoute(
         },
         {
           role: 'user',
-          content: `Generate a hypothetical NEW transportation route in Charlotte, NC that does NOT follow existing roads.
+          content: `Generate a hypothetical transportation route in Charlotte, NC.
             CRITICAL REQUIREMENTS:
-            - The route MUST start at exactly: [${originCoords[0]}, ${originCoords[1]}] (${originAddress})
-            - The route MUST end at exactly: [${destinationCoords[0]}, ${destinationCoords[1]}] (${destinationAddress})
+            - The route MUST start at exactly: [${originCoords[0]}, ${
+            originCoords[1]
+          }] (${originAddress})
+            - The route MUST end at exactly: [${destinationCoords[0]}, ${
+            destinationCoords[1]
+          }] (${destinationAddress})
             - Generate approximately 13 intermediate waypoints between these endpoints
-            - The first coordinate in your array must be [${originCoords[0]}, ${originCoords[1]}]
-            - The last coordinate in your array must be [${destinationCoords[0]}, ${destinationCoords[1]}]
+            - The first coordinate in your array must be [${originCoords[0]}, ${
+            originCoords[1]
+          }]
+            - The last coordinate in your array must be [${
+              destinationCoords[0]
+            }, ${destinationCoords[1]}]
             - Intermediate points should form a logical new infrastructure path optimized for ${transportationMethod}
             - Consider the time period ${time} on ${day} for traffic optimization
-            Propose entirely new infrastructure (not existing roads) that would be optimal for this journey.
+            EXISTING ROUTE CONTEXT:
+            - Current route distance: ${(existingRoute.distance / 1000).toFixed(
+              2
+            )} km
+            - Current route duration: ${(existingRoute.duration / 60).toFixed(
+              1
+            )} minutes
+            - Current route uses: ${
+              existingRoute.summary || 'existing road network'
+            }
+            Create an optimal hybrid route that:
+            1. LEVERAGES existing infrastructure where it makes sense (roads, bike lanes, bridges, tunnels)
+            2. PROPOSES NEW infrastructure segments only where they provide significant improvement
+            3. IDENTIFIES specific existing roads/routes to utilize (e.g., "use existing N Tryon St from mile 0-2.5")
+            4. SPECIFIES where new construction should BEGIN and END
+            5. MINIMIZES construction costs while maximizing benefits
             Additionally, estimate these metrics for your proposed route:
                 - Expected travel time in optimal conditions
                 - Estimated construction cost (USD)
