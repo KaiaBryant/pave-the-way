@@ -1,12 +1,19 @@
 /* Home */
 #hero-video {
   width: 100%;
-  height: auto;
+  height: 50vh;
+  object-fit: cover;
 }
 
 .homepage-hero-section {
   position: relative;
   text-align: center;
+}
+
+
+#moveForward {
+  width: 45vw;
+  height: auto;
 }
 
 .overlay {
@@ -19,39 +26,47 @@
 }
 
 .homepage-hero-content {
+  display: flex;
   position: absolute;
+  width: 80%;
+  justify-content: center;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: "Segoe UI", sans-serif;
 }
+
 .homepage-hero-content h1 {
   font-weight: bolder;
   font-size: 26px;
   color: black;
   margin-bottom: 1.5em;
 }
+
 #homepage-button {
   position: relative;
   display: inline-block;
-  background: linear-gradient(to bottom, #1b283f, #4a6691);
+  height: fit-content;
+  align-self: center;
+  background-color: rgba(255, 255, 255, 0.737);
   font-weight: bold;
   font-size: 18px;
   border: none;
-  border-radius: 20px;
-  padding: 10px 15px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  top: -9px;
   cursor: pointer;
   box-shadow: 0 2px 10px black;
   transition: all 0.3s ease-in-out;
 }
 
 #homepage-button a {
-  color: white;
+  color: black;
 }
 
 /* Hover animation */
 #homepage-button:hover {
-  background: linear-gradient(to bottom, #2c4063, #5b88b7);
+  background-color: white;
   animation: 2s ease-in-out;
   transform: translateY(-2px);
 }
@@ -109,35 +124,63 @@
   font-size: 0.9rem;
 }
 
-/* Bottom context */
 .homepage-content--section {
   display: flex;
   flex-direction: column;
-  text-align: left;
+  width: 95vw;
+  margin: auto;
+  gap: 4em;
+  margin-top: 50px;
+  margin-bottom: 10vh;
+}
+
+#vision {
   padding: 20px;
-  gap: 1em;
-  margin-top: 1em;
+  background-color: rgb(229, 229, 229);
+  font-size: 14px;
+
 }
 
-.homepage-title {
-  color: rgb(24, 23, 23);
-  font-size: 20px;
+#mobility-vision {
+  padding-top: 20px;
+  font-size: 30px;
 }
 
-.homepage-paragraph {
-  color: #1b283f;
-  font-size: 16px;
+#looking-ahead {
+  margin-top: 20px;
+  font-size: 30px;
+}
+
+
+#busRider {
+  display: none;
+  clip-path: polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%);
 }
 
 /*-------------------- Tablet Media Queries --------------------*/
 @media screen and (min-width: 768px) {
+  #hero-video {
+    width: 100%;
+    height: 70vh;
+    object-fit: cover;
+  }
+
   .homepage-hero-content h1 {
     font-size: 40px;
   }
 
+  #moveForward {
+    width: 40vw;
+    height: auto;
+    display: inline-block;
+  }
+
+
   #homepage-button {
     font-size: 20px;
     padding: 20px 25px;
+    display: inline-block;
+    top: -10px;
   }
 
   /* Cards Container */
@@ -166,21 +209,35 @@
 
   /* Bottom context */
   .homepage-content--section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    margin: auto;
     gap: 4em;
     margin-top: -50px;
-    margin-bottom: 1em;
+    margin-bottom: 10vh;
   }
 
-  .homepage-title {
-    font-size: 22px;
-    text-align: center;
+  #vision {
+    padding: 30px;
+    background-color: rgb(229, 229, 229);
+    font-size: 14px;
+
   }
 
-  .homepage-paragraph {
-    font-size: 18px;
-    text-align: center;
+  #mobility-vision {
+    padding-top: 20px;
+    font-size: 30px;
+  }
+
+  #looking-ahead {
+    margin-top: 20px;
+    font-size: 30px;
+  }
+
+
+  #busRider {
+    display: none;
   }
 }
 
@@ -189,9 +246,11 @@
   .homepage-hero-content h1 {
     font-size: 50px;
   }
+
   #homepage-button {
     font-size: 30px;
     padding: 25px 30px;
+    top: -20px;
   }
 
   /* Cards Container */
@@ -225,24 +284,57 @@
 
   /* Bottom context */
   .homepage-content--section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
+    width: 95vw;
+    margin: auto;
     gap: 4em;
-    margin-top: -60px;
-    margin-bottom: 1em;
+    margin-top: -50px;
+    margin-bottom: 10vh;
   }
 
-  .homepage-title {
-    font-size: 24px;
+  #vision {
+    padding: 0;
+    padding-right: 30px;
+    background-color: rgb(229, 229, 229);
+    font-size: 14px;
+
   }
 
-  .homepage-paragraph {
-    font-size: 20px;
+  #mobility-vision {
+    padding-top: 20px;
+    font-size: 30px;
+  }
+
+  #looking-ahead {
+    margin-top: 4.8vw;
+    font-size: 30px;
+  }
+
+
+  #busRider {
+    width: 400px;
+    height: auto;
+    float: left;
+    margin-right: 30px;
+    display: block;
   }
 }
 
 /*-------------------- Large Desktop Media Queries --------------------*/
 @media screen and (min-width: 1440px) {
+
+  #hero-video {
+    width: 100%;
+    height: 90vh;
+    object-fit: cover;
+  }
+
+  #moveForward {
+    width: 30vw;
+    height: auto;
+  }
+
   /* Cards Container */
   .cards--container {
     display: grid;
@@ -268,10 +360,39 @@
 
   /* Bottom context */
   .homepage-content--section {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    margin: auto;
     gap: 4em;
     margin-top: -120px;
-    margin-bottom: 1em;
+    margin-bottom: 10vh;
+
   }
+
+  #vision {
+    padding-right: 30px;
+    background-color: rgb(229, 229, 229);
+    font-size: 16px;
+
+  }
+
+  #mobility-vision {
+    padding-top: 20px;
+    font-size: 40px;
+  }
+
+  #looking-ahead {
+    margin-top: 20px;
+    font-size: 40px;
+  }
+
+
+  #busRider {
+    width: 400px;
+    height: auto;
+    float: left;
+    margin-right: 30px;
+  }
+
 }

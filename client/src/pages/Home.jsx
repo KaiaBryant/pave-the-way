@@ -6,13 +6,15 @@ import bus from "../assets/bus.png"
 import pedestrians from "../assets/pedestrians.png"
 import bicycle from "../assets/bicycle.png"
 import video from "../assets/charlotte.mp4"
+import moveForward from "../assets/MovingForward.png"
+import busRider from "../assets/busRider.png"
 
 export default function Home() {
   const data = [
     {
       icon: car,
       title: "Roadway Improvements",
-      message: "Cleaner air through sustainable",
+      message: "Sustainable infrastructure",
     },
     {
       icon: bus,
@@ -41,7 +43,7 @@ export default function Home() {
         </div>
         <div className="overlay"></div>
         <div className="homepage-hero-content">
-          <h1>Moving Forward Together</h1>
+          <img id="moveForward" src={moveForward}></img>
           <button id="homepage-button">
             <Link to="/survey">Start Survey</Link>
           </button>
@@ -64,9 +66,10 @@ export default function Home() {
       </section>
 
       <section className="homepage-content--section">
-        <div>
-          <h1 className="homepage-title">Mobility Vision</h1>
-          <p className="homepage-paragraph">
+        <div id="vision">
+          <img id="busRider" src={busRider}></img>
+          <h1 id="mobility-vision">Mobility Vision</h1>
+          <p>
             Inspired by Mecklenburg County's Pave Act Bill, Charlotte continues
             to experience rapid growth, with limited infrastructure. Our mission
             gives Charlotte residents a voice by collecting real-time responses
@@ -74,11 +77,9 @@ export default function Home() {
             smarter, more community-focused decisions and sustainable urban
             development.
           </p>
-        </div>
 
-        <div>
-          <h1 className="homepage-title">Looking Ahead</h1>
-          <p className="homepage-paragraph">
+          <h1 id="looking-ahead">Looking Ahead</h1>
+          <p>
             We're working to make Charlotte a city where everyone can move
             safely and easily by gathering input from the community, and we help
             guide the city funding toward improving bus routes, bike lanes,
@@ -86,7 +87,9 @@ export default function Home() {
             and individuals with disabilities. Together, we can build a more
             accessible and sustainable Charlotte for all.
           </p>
+
         </div>
+
       </section>
     </div>
   );
