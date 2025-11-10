@@ -1,17 +1,66 @@
-# React + Vite
+# 🌍 Pave the Way
+*A civic technology platform empowering Charlotte residents to help shape sustainable transportation infrastructure.*
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 🧭 Overview
+**Pave the Way** is a full-stack web application designed to collect transportation needs and preferences from the citizens of **Charlotte, North Carolina** through a community survey. Using **AI-powered analysis** and **mapping tools**, the app generates **eco-friendly route recommendations** to help guide the city’s infrastructure planning under the **P.A.V.E. Act**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+When a user submits a survey, their data is processed through the **Perplexity AI API**, which analyzes their route and returns optimized, environmentally conscious alternatives. These recommendations are visualized using **Mapbox**, showing both the existing and the hypothetical eco-friendly route along with sustainability metrics and suggestions for new infrastructure.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🌟 Core Features
+### 🚶‍♀️ Citizen-Focused Survey
+- Collects travel needs, destinations, and preferred modes of transport (walking, biking, bus, etc.)
+- Provides both **anonymous** and **account-based** participation
 
-## Expanding the ESLint configuration
+### 🧠 AI-Powered Recommendations
+- Integrates with **Perplexity AI API** to analyze user-submitted travel routes  
+- Suggests **eco-friendly infrastructure improvements** such as sidewalks, bus routes, or bike lanes  
+- Returns key metrics:
+  - Estimated **carbon emission reductions**
+  - **Accessibility score**
+  - **Reduced travel distance**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# pave-the-way
+### 🗺️ Interactive Mapping
+- Visualizes both **current route** and **AI-generated hypothetical route**  
+
+### 👥 User Accounts & Data Management
+- Users can create an account to:
+  - Save past surveys and results  
+  - View stored metrics/route data
+- However, accounts are **not required** to complete the survey  
+- Accounts include **full CRUD functionality**:
+  - **Create** an account  
+  - **Read** and display user details  
+  - **Update** account information  
+  - **Delete** an account 
+
+### 🏙️ Civic & Environmental Impact
+- Aims to support **Charlotte’s sustainability and accessibility goals** under the **P.A.V.E. Act**  
+- Can provide city planners with **data-driven recommendations** for eco-friendly infrastructure investment  
+
+---
+
+## 🧩 Tech Stack
+
+**Front-End**
+- **React** (for UI and state management)
+- **Bootstrap** for responsive design
+- **Mapbox** for map rendering and route visualization
+- **Fetch API** for client-server communication
+
+**Back-End**
+- 🟩 **Node.js** and **Express.js** (API routes, authentication, and business logic)
+- 🧠 **Perplexity AI API** for generating optimized infrastructure suggestions
+- 🗄️ **SQL / PostgreSQL** (hosted) for user and survey data
+- ⚙️ **dotenv** for environment variable configuration
+
+**Dev Tools**
+- npm  
+- Git & GitHub for version control  
+- Concurrently to run backend and frontend simultaneously 
+- Railway (or similar service) for SQL database hosting
+
+
